@@ -6,6 +6,43 @@ function ajaxExample() {
         .then((data) => console.log(data));
 }
 
+$('#btn-update').click(function () {
+    $(function () {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, token);
+        });
+        const id_emp = $("#id").val();
+        const id_semaine = $("#id-semaine-update").val();
+
+        const url = `http://localhost:8080/employees-pointage-update-front?id-semaine=${id_semaine}&id-emp=${id_emp}`;
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data) {
+                    if (data.status) {
+                        if (data.status.code == 200) {
+                            let d = data.data[0];
+                            d.forEach((dd) => {
+                                $(`#${dd.weekOfDay}-ferier`).val(dd.numberHoursFerier);
+                                $(`#${dd.weekOfDay}-day`).val(dd.numberHoursDaily);
+                                $(`#${dd.weekOfDay}-night`).val(dd.numberHoursNightly);
+                            })
+                        } else {
+                            alert(data.status.message);
+                        }
+                    }
+                }
+            },
+        });
+    });
+});
+
 $('#validate-hours').click(function () {
     console.log("Calculating hours");
     $(function () {
@@ -27,13 +64,15 @@ $('#validate-hours').click(function () {
                 numberHoursFerier: $(`#${iD}-ferier`).val(),
                 weekOfDay: iD,
                 numberHoursDaily: $(`#${iD}-day`).val(),
-                numberHoursNightly: $(`#${iD}-night`).val()
+                numberHoursNightly: $(`#${iD}-night`).val(),
+                id_semaine: id_semaine,
+                id_employee: id_emp
             });
             // console.log($(`#${iD}-ferier`).is(":checked"));
             // console.log($(`#${iD}-day`).val());
             // console.log($(`#${iD}-night`).val());
         }
-        
+
 
         const data = {
             pointings: pointings,
@@ -51,10 +90,10 @@ $('#validate-hours').click(function () {
             dataType: "json",
             success: function (data) {
                 console.log(data);
-                if(data) {
-                    if(data.status) {
-                        if(data.status.code == 200) {
-                            window.location.href='http://localhost:8080/employees-fiche-front/' + id_emp;
+                if (data) {
+                    if (data.status) {
+                        if (data.status.code == 200) {
+                            window.location.href = 'http://localhost:8080/employees-fiche-front/' + id_emp;
                         } else {
                             alert(data.status.message);
                         }
@@ -107,12 +146,17 @@ $("#calculate-hours").click(function (event) {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
-                console.table(data.data[0]);
-                const hoursData = data.data[0];
-                $("#table-hours tbody tr").empty();
-                hoursData.forEach((hourData) => {
-                    $('#table-hours > tbody:last-child').append(`<tr><td>${hourData.code}</td><td>${hourData.hours}</td></tr>`);
-                });
+                if (data.status.code == 200) {
+                    console.table(data.data[0]);
+                    const hoursData = data.data[0];
+                    $("#table-hours tbody tr").empty();
+                    hoursData.forEach((hourData) => {
+                        $('#table-hours > tbody:last-child').append(`<tr><td>${hourData.code}</td><td>${hourData.hours}</td></tr>`);
+                    });
+                } else {
+                    alert(data.status.message);
+                }
+                
             },
         });
     });

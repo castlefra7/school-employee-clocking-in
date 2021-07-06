@@ -90,12 +90,23 @@ create table pointages (
     foreign key (id_employee) references employees(id)
 );
 
-/* DATA */
--- insert into employee_categories (name, standard_hour_per_day, day_week_start, day_week_end, standard_salary, indemnity_percent) values ('normal', 8, 1, 7, 11, 0.3);
--- insert into employee_categories (name, standard_hour_per_day, day_week_start, day_week_end, standard_salary, indemnity_percent) values ('gardien', 8, 1, 7, 110000, 0.3);
+create table pointings_daily (
+    id serial primary key,
+    id_employee int,
+    id_semaine int not null check (id_semaine between 1 and 52),
+    weekOfDay int not null check (weekOfDay between 1 and 7),
+    numberHoursDaily float not null check (numberHoursDaily >=0 ),
+    numberHoursNightly float not null check (numberHoursNightly >=0 ),
+    numberHoursFerier float not null check (numberHoursFerier >=0 ),
+    foreign key (id_employee) references employees(id)
+);
 
--- insert into employees (last_name, first_name, id_category, date_birth, date_begin_employment, date_end_employment, registration_number) values ('rakoto', 'soa', 1, '1980-02-05', '2021-01-01', null,  nextval('registrationnumber'));
--- insert into employees (last_name, first_name, id_category, date_birth, date_begin_employment, date_end_employment, registration_number) values ('ramano', 'mickael', 1, '1985-02-05', '2021-02-01', null,  nextval('registrationnumber'));
+/* DATA */
+insert into employee_categories (name, standard_hour_per_day, day_week_start, day_week_end, standard_salary, indemnity_percent) values ('normal', 8, 1, 7, 200000, 0.3);
+insert into employee_categories (name, standard_hour_per_day, day_week_start, day_week_end, standard_salary, indemnity_percent) values ('gardien', 8, 1, 7, 110000, 0.3);
+
+insert into employees (last_name, first_name, id_category, date_birth, date_begin_employment, date_end_employment, registration_number) values ('rakoto', 'soa', 1, '1980-02-05', '2021-01-01', null,  nextval('registrationnumber'));
+insert into employees (last_name, first_name, id_category, date_birth, date_begin_employment, date_end_employment, registration_number) values ('ramano', 'mickael', 1, '1985-02-05', '2021-02-01', null,  nextval('registrationnumber'));
 
 insert into majorer_config (majorer_type, code, percentage) values ('nuit', 'hm130', 0.3);
 insert into majorer_config (majorer_type, code, percentage) values ('dimanche', 'hm140', 0.4);

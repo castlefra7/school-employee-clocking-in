@@ -274,8 +274,7 @@ public class FctGen {
         for (String column : columns) {
             for (Method method : methods) {
                 String methodName = method.getName().toLowerCase().substring(3);
-                
-                if (methodName.equals(column)) {
+                if (methodName.equals(column.toLowerCase())) {
                     neededMethods.add(method);
                     break;
                 }
@@ -310,6 +309,7 @@ public class FctGen {
     }
 
     public static void setValues(Object ob, Method method, ResultSet rs) throws NoSuchMethodException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        
         if (method.getParameters().length <= 0) {
             throw new NoSuchMethodException("Invalide setter");
         }

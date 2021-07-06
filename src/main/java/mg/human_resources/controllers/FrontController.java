@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class FrontController {
 Logger logger = LoggerFactory.getLogger(AdminController.class);
-    private int count_per_page = 1;
+    private int count_per_page = 5;
 
     String uploadDir = "D:\\upload-dir\\fiche_paie.pdf";
     

@@ -10,7 +10,6 @@ import java.util.List;
 import mg.human_resources.conn.ConnGen;
 import mg.human_resources.gen.FctGen;
 import mg.human_resources.rsc.PointingAttr;
-import mg.human_resources.rsc.PointingDailyAttr;
 
 /**
  *
@@ -40,9 +39,12 @@ public class Pointage extends BaseModel {
             String reqDel = String.format("delete from pointages where id_employee = %d and id_semaine = %d", attr.getEmployee().getId(),
                     attr.getSemaine());
             FctGen.update(reqDel, conn);
+            reqDel =  String.format("delete from pointings_daily where id_employee = %d and id_semaine = %d", attr.getEmployee().getId(),
+                    attr.getSemaine());
+            FctGen.update(reqDel, conn);
 
             List<EmployeeWeeklyHours> allHours = new Employee().calculateHours(attr, conn);
-
+            
             for (EmployeeWeeklyHours hour : allHours) {
                 Pointage pointage = new Pointage();
                 pointage.setId_employee(attr.getEmployee().getId());
@@ -53,6 +55,8 @@ public class Pointage extends BaseModel {
 
                 pointage.insert(conn);
             }
+            
+            new PointingDailyAttr().insertAll(attr.getPointings(), conn);
 
             conn.commit();
         } catch (Exception ex) {

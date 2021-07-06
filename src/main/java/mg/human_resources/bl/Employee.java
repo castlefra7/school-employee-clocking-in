@@ -19,7 +19,6 @@ import mg.human_resources.gen.FctGen;
 import mg.human_resources.gen.PDFBoxable;
 import mg.human_resources.rsc.EmployeeAttr;
 import mg.human_resources.rsc.PointingAttr;
-import mg.human_resources.rsc.PointingDailyAttr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -155,7 +154,7 @@ public final class Employee extends BaseModel {
             double indemnity = empCateg.getStandard_salary() * empCateg.getIndemnity_percent(); // TODO HOW TO CALCULATE base salary * percent_indemnity
             double[] amounts = new double[3];
             double prorata = 0;
-            if (totalHours < empCateg.getWeekly_hour()) {
+            if (totalHours < empCateg.getWeekly_hour() && totalHours > 0) {
                 indemnity = 0;
                 prorata = (empCateg.getWeekly_hour() - totalHours) * baseHourlyRate;
             }
@@ -216,6 +215,12 @@ public final class Employee extends BaseModel {
 
             for (int iD = 0; iD < dailyPoints.size(); iD++) {
                 PointingDailyAttr point = dailyPoints.get(iD);
+                if(point.getNumberHoursDaily() < 0 || point.getNumberHoursNightly() < 0 || point.getNumberHoursFerier() < 0) {
+                    throw new Exception("Veuillez spécifier des heures non négatives");
+                }
+                if(point.getNumberHoursDaily() > 17 || point.getNumberHoursNightly() > 7) {
+                    throw new Exception("Veuillez spécifier aux plus 17 h pour le jour et 7 h pour la nuit");
+                }
                 totalWorkedHours += point.getNumberHoursDaily();
                 totalWorkedHours += point.getNumberHoursNightly();
                 totalWorkedHours += point.getNumberHoursFerier();

@@ -5,6 +5,7 @@
  */
 package mg.human_resources.rsc;
 
+import mg.human_resources.bl.PointingDailyAttr;
 import java.util.List;
 
 /**
