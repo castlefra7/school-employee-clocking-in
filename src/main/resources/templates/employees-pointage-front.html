@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+    <div th:replace="fragments/general.html :: head"></div>
+    <body id="pointage">
+        <div th:replace="fragments/general.html :: header"></div>
+
+        <div id="element-to-print" class="columns is-centered m-5">
+            <div class="column is-one-quarter">
+                <h1 class="is-size-1">Pointage</h1>
+                <form th:object="${employee}"
+                      method="post"
+                      th:action="${isupdate != null && isupdate == true}?@{/employees-update}:@{/employees}"
+                      >
+                    <input type="hidden" th:field="*{id}" th:value="${employee.id}" />
+                    <div class="field">
+                        <label class="label">Date d'embauche</label>
+                        <div class="control">
+                            <input class="input" disabled  th:field="*{date_begin_employment}" type='datetime-local'/>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Catégorie</label>
+                        <div class="select">
+                            <select disabled class="input" th:field="*{id_category}">
+                                <option th:each='categ: ${categories}' th:text='${categ.getName()}' th:value="${categ.getId()}" />
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Nom</label>
+                        <div class="control">
+                            <input disabled class="input" th:field="*{last_name}" type='text'/>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Prénom</label>
+                        <div class="control">
+                            <input disabled class="input" th:field="*{first_name}" type='text'/>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Date de naissance</label>
+                        <div class="control">
+                            <input disabled class="input"  th:field="*{date_birth}" type='datetime-local'/>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Date fin de contrant</label>
+                        <div class="control">
+                            <input disabled class="input"  th:field="*{date_end_employment}" type='datetime-local'/>
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+
+            <div class="column">
+                <table  class="table is-bordered mt-2 mb-5">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Lundi</th>
+                            <th>Mardi</th>
+                            <th>Mercredi</th>
+                            <th>Jeudi</th>
+                            <th>Vendredi</th>
+                            <th>Samedi</th>
+                            <th>Dimanche</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Férié</td>
+                            <td>
+                                <label class="checkbox">
+                                    <input id="1-ferier" type="checkbox">
+                                </label>
+                            </td>
+                            <td>
+                                <label class="checkbox">
+                                    <input id="2-ferier" type="checkbox">
+                                </label>
+                            </td>
+                            <td>
+                                <label class="checkbox">
+                                    <input id="3-ferier" type="checkbox">
+                                </label>
+                            </td>
+                            <td>
+                                <label class="checkbox">
+                                    <input id="4-ferier" type="checkbox">
+                                </label>
+                            </td>
+                            <td>
+                                <label class="checkbox">
+                                    <input id="5-ferier" type="checkbox">
+                                </label>
+                            </td>
+                            <td>
+                                <label class="checkbox">
+                                    <input id="6-ferier" type="checkbox">
+                                </label>
+                            </td>
+                            <td>
+                                <label class="checkbox">
+                                    <input id="7-ferier" type="checkbox">
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Jour (5h - 22h)</td>
+                            <td>
+                                <div class="field">
+                                    <div class="control">
+                                        <input id="1-day" class="input" value="10" type='number'/>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="field">
+                                    <div class="control">
+                                        <input id="2-day" class="input" value="10" type='number'/>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="field">
+                                    <div class="control">
+                                        <input id="3-day" class="input" value="10" type='number'/>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="field">
+                                    <div class="control">
+                                        <input id="4-day" class="input" value="10" type='number'/>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="field">
+                                    <div class="control">
+                                        <input id="5-day" class="input" value="10" type='number'/>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="field">
+                                    <div class="control">
+                                        <input id="6-day" class="input" value="10" type='number'/>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="field">
+                                    <div class="control">
+                                        <input id="7-day" class="input" value="10" type='number'/>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Nuit (0h - 5h/22h - 0h)</td>
+                            <td>
+                                <div class="field">
+                                    <div class="control">
+                                        <input id="1-night" class="input" value="5" type='number'/>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="field">
+                                    <div class="control">
+                                        <input id="2-night" class="input" value="5" type='number'/>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="field">
+                                    <div class="control">
+                                        <input id="3-night" class="input" value="5" type='number'/>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="field">
+                                    <div class="control">
+                                        <input id="4-night" class="input" value="5" type='number'/>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="field">
+                                    <div class="control">
+                                        <input id="5-night" class="input" value="5" type='number'/>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="field">
+                                    <div class="control">
+                                        <input id="6-night" class="input" value="5" type='number'/>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="field">
+                                    <div class="control">
+                                        <input id="7-night" class="input" value="5" type='number'/>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td  colspan="7"></td>
+                            <td>
+                                <button id="calculate-hours" class="button is-primary is-fullwidth">Valider</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="columns">
+                    <div class="column is-one-third">
+                        <table id="table-hours" class="table is-bordered mt-5">
+                            <thead>
+                                <tr>
+                                    <th>Désignation</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="fragments/general.html :: footer"></div>
+    </body>
+</html> 

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <div th:replace="fragments/general.html :: head"></div>
+    <body>
+        <div th:replace="fragments/general.html :: header"></div>
+
+        <div class="columns is-centered">
+            <div class="column is-four-fifths">
+                <h1 class="is-size-1">Liste supplémentaires maximum</h1>
+                <a class="button is-primary" th:href="@{/supplmax-form}">Nouveau maximum</a>
+
+                <table class="table is-bordered mt-2">
+                    <thead>
+                        <tr>
+                            <th>Maximum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="supplmax: ${supplmaxes}">
+                            <td th:text="${supplmax.getMax_hour_supp()}" />
+                            <td>
+                                <a th:href="@{/supplmax/{id}(id=${supplmax.getId()})}" class="button is-primary">Détails</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <nav th:if="${numberpages > 0}" class="pagination is-centered" role="navigation" aria-label="pagination">
+                    <a th:href="@{/supplmax(page=${prev})}"  class="pagination-previous">Previous</a>
+                    <a th:href="@{/supplmax(page=${next})}" class="pagination-next">Next page</a>
+                    <ul class="pagination-list">
+                        <li  th:each="iter: ${#numbers.sequence(1, __${numberpages}__)}">
+                            <a
+                                th:classappend="${(iter-1== page) ? 'is-current': ''}"
+                                th:href="@{/supplmax(page=${iter-1})}"
+                                th:text="${iter}" class="pagination-link">-1</a></li>
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+        <div th:replace="fragments/general.html :: footer"></div>
+    </body>
+</html> 

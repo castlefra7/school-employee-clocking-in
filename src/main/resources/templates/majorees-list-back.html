@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <div th:replace="fragments/general.html :: head"></div>
+    <body>
+        <div th:replace="fragments/general.html :: header"></div>
+
+        <div class="columns is-centered">
+            <div class="column is-four-fifths">
+                <h1 class="is-size-1">Liste majorées</h1>
+                <a class="button is-primary" th:href="@{/majorees-form}">Nouvelle majorée</a>
+
+                <table class="table is-bordered mt-2">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Type</th>
+                            <th>Pourcentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="maj: ${majorees}">
+                            <td th:text="${maj.getCode()}" />
+                            <td th:text="${maj.getMajorer_type()}" />
+                            <td th:text="${maj.getPercentage()}" />
+                            <td>
+                                <a th:href="@{/majorees/{id}(id=${maj.getId()})}" class="button is-primary">Détails</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <nav th:if="${numberpages > 0}" class="pagination is-centered" role="navigation" aria-label="pagination">
+                    <a th:href="@{/majorees(page=${prev})}"  class="pagination-previous">Previous</a>
+                    <a th:href="@{/majorees(page=${next})}" class="pagination-next">Next page</a>
+                    <ul class="pagination-list">
+                        <li  th:each="iter: ${#numbers.sequence(1, __${numberpages}__)}">
+                            <a
+                                th:classappend="${(iter-1== page) ? 'is-current': ''}"
+                                th:href="@{/majorees(page=${iter-1})}"
+                                th:text="${iter}" class="pagination-link">-1</a></li>
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+        <div th:replace="fragments/general.html :: footer"></div>
+    </body>
+</html> 

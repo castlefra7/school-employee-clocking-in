@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head th:fragment="head">
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link th:href="@{/css/bulma.min.css}" rel="stylesheet" />
+        <link th:href="@{/css/style.css}" rel="stylesheet">
+        <meta name="_csrf" th:content="${_csrf.token}"/>
+        <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+        <script src="@{/js/chart.min.js}"></script> 
+
+        <style>
+            alert {
+                color: red !important;
+            }
+        </style>
+    </head>
+    <body>
+        <div th:fragment="header">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    <a class="navbar-item" th:href="@{/employees-front}">
+                        Ressources Humaines
+                    </a>
+                    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+
+                <div id="navbarBasicExample" class="navbar-menu">
+                    <div  sec:authorize="isAuthenticated()" class="navbar-start">
+
+                        <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/categories}">
+                            Liste catégories
+                        </a>
+                        <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/employees}">
+                            Liste employés
+                        </a>
+                        <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/supplementaries}">
+                            Liste supplémentaires
+                        </a>
+                        <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/majorees}">
+                            Liste majorées
+                        </a>
+                        <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{supplmax}">
+                           Supplémentaire maximum
+                        </a>
+                        <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/users}">
+                            Utilisateurs
+                        </a>
+
+                        <a  class="navbar-item" th:href="@{/employees-front}">
+                            Liste employés Front
+                        </a>
+
+                    </div>
+
+                    <div class="navbar-end">
+                        <div class="navbar-item">
+                            <div class="buttons">
+                                <a sec:authorize="!isAuthenticated()" th:href="@{/login}" class="button is-primary">
+                                    <strong>Se connecter</strong>
+                                </a>
+                                
+                                <form class="is-flex is-align-items-center is-flex-direction-row" 
+                                      sec:authorize="isAuthenticated()" th:action="@{/perform_logout}" method="post">
+                                    <button th:text ="${#authentication.getPrincipal().getUser().getName()}" class="button" disabled></button>
+                                    <input class="button is-primary" type="submit" value="Se déconnecter" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <div th:if="${error != null}">
+                <div th:if="${error != ''}" class="columns mt-2 is-mobile is-centered">
+                    <div class="column is-half">
+                        <article class="message is-danger">
+                            <div class="message-header">
+                                <p>Erreur</p>
+                            </div>
+
+                            <div  class="message-body">
+                                <p  th:text="${error}" />
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${success != null}">
+                <div th:if="${success != ''}" class="columns mt-2 is-mobile is-centered">
+                    <div class="column is-half">
+                        <article class="message is-success">
+                            <div class="message-header">
+                                <p>Succès</p>
+                            </div>
+
+                            <div  class="message-body">
+                                <p  th:text="${success}" />
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="content" th:fragment="footer">
+        <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/html2pdf.bundle.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/chart.js}"></script>
+        <script type="text/javascript" th:src="@{/js/app.js}"></script>
+
+
+    </div>
+</body>
+</html>

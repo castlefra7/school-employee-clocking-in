@@ -1,0 +1,60 @@
+/* POINTAGE */
+
+/* END POINTAGE */
+.is-current {
+    background-color: yellowgreen;
+}
+
+.showRemainPlace {
+    background-color: yellow;
+}
+img {
+    max-width: 100px;
+    width: 100px;
+}
+
+table {
+    width: 100%;
+}
+
+.card-departure-flight {
+    cursor: pointer;
+}
+
+canvas {
+    max-width: 500px;
+    max-height: 500px;
+}
+
+/* AUTOCOMPLETE */
+
+.wrapper input:focus {
+    outline: none;
+}
+
+.results {
+    padding: 0px;
+}
+
+.results ul {margin: 0; padding: 0; }
+.results ul li {
+    list-style: none;
+    border-radius: 3px;
+    opacity: 0;
+    display: none;
+    padding: 8px 12px;
+    transition: all .5s linear;
+}
+
+.show .results ul li {
+    opacity: 1;
+    display: block;
+}
+
+.show .results {
+    padding: 10px;
+}
+
+.results ul li:hover {
+    background: #ececec
+}
