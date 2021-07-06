@@ -39,6 +39,14 @@ public class AdminController {
     Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     private int count_per_page = 5;
+    
+    /* STATS */
+    @GetMapping("/stats")
+    public String getStats(Model model, @RequestParam(name = "page", required = false, defaultValue = "0") int page) throws Exception {
+        model.addAttribute("employees", new Employee().findAllPage(null, page, count_per_page));
+        return "employees-stats";
+    }
+    /* END STATS */
 
     /* CRUD SUPPL MAX  */
     @GetMapping("/supplmax/{id}")

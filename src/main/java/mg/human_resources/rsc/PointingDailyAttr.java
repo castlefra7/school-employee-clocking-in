@@ -12,9 +12,10 @@ package mg.human_resources.rsc;
 public class PointingDailyAttr {
 
     private boolean isHoliday;
-    private int weekOfDay;
-    private int numberHoursDaily;
-    private int numberHoursNightly;
+    private float weekOfDay;
+    private float numberHoursDaily;
+    private float numberHoursNightly;
+    private float numberHoursFerier;
 
     public boolean isIsHoliday() {
         return isHoliday;
@@ -24,28 +25,36 @@ public class PointingDailyAttr {
         this.isHoliday = isHoliday;
     }
 
-    public int getWeekOfDay() {
+    public float getWeekOfDay() {
         return weekOfDay;
     }
 
-    public void setWeekOfDay(int weekOfDay) {
+    public void setWeekOfDay(float weekOfDay) {
         this.weekOfDay = weekOfDay;
     }
 
-    public int getNumberHoursDaily() {
+    public float getNumberHoursDaily() {
         return numberHoursDaily;
     }
 
-    public void setNumberHoursDaily(int numberHoursDaily) {
+    public void setNumberHoursDaily(float numberHoursDaily) {
         this.numberHoursDaily = numberHoursDaily;
     }
 
-    public int getNumberHoursNightly() {
+    public float getNumberHoursNightly() {
         return numberHoursNightly;
     }
 
-    public void setNumberHoursNightly(int numberHoursNightly) {
+    public void setNumberHoursNightly(float numberHoursNightly) {
         this.numberHoursNightly = numberHoursNightly;
+    }
+
+    public float getNumberHoursFerier() {
+        return numberHoursFerier;
+    }
+
+    public void setNumberHoursFerier(float numberHoursFerier) {
+        this.numberHoursFerier = numberHoursFerier;
     }
 
 }

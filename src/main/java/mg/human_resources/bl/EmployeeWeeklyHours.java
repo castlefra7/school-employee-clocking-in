@@ -9,34 +9,44 @@ package mg.human_resources.bl;
  *
  * @author lacha
  */
-public final class EmployeeWeeklyHours {
+public class EmployeeWeeklyHours {
 
     private String code;
-    private int hours;
-    
+    private float hours;
+    private double percentage;
+
     public EmployeeWeeklyHours() {
-        
+
     }
-    
-    public EmployeeWeeklyHours(String _code, int _hours) {
+
+    public EmployeeWeeklyHours(String _code, float _hours, double _percent) {
         this.setCode(_code);
         this.setHours(_hours);
+        this.setPercentage(_percent);
     }
 
     public String getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public final void setCode(String code) {
         this.code = code;
     }
 
-    public int getHours() {
+    public float getHours() {
         return hours;
     }
 
-    public void setHours(int hours) {
+    public final void setHours(float hours) {
         this.hours = hours;
+    }
+
+    public double getPercentage() {
+        return percentage;
+    }
+
+    public final void setPercentage(double percentage) {
+        this.percentage = percentage;
     }
 
 }

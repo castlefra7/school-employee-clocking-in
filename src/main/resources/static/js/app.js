@@ -6,7 +6,64 @@ function ajaxExample() {
         .then((data) => console.log(data));
 }
 
+$('#validate-hours').click(function () {
+    console.log("Calculating hours");
+    $(function () {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, token);
+        });
+        const url = "http://localhost:8080/employees-pointage-validate-front/";
+        const id_emp = $("#id").val();
+        const id_semaine = $("#id-semaine").val();
 
+        const numberDays = 7;
+        const pointings = [];
+        for (let iD = 1; iD <= numberDays; iD++) {
+            pointings.push({
+                // isHoliday:$(`#${iD}-ferier`).is(":checked"),
+                isHoliday: false,
+                numberHoursFerier: $(`#${iD}-ferier`).val(),
+                weekOfDay: iD,
+                numberHoursDaily: $(`#${iD}-day`).val(),
+                numberHoursNightly: $(`#${iD}-night`).val()
+            });
+            // console.log($(`#${iD}-ferier`).is(":checked"));
+            // console.log($(`#${iD}-day`).val());
+            // console.log($(`#${iD}-night`).val());
+        }
+        
+
+        const data = {
+            pointings: pointings,
+            employee: {
+                id: id_emp
+            },
+            semaine: id_semaine
+        };
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if(data) {
+                    if(data.status) {
+                        if(data.status.code == 200) {
+                            window.location.href='http://localhost:8080/employees-fiche-front/' + id_emp;
+                        } else {
+                            alert(data.status.message);
+                        }
+                    }
+                }
+            },
+        });
+    });
+})
 
 
 $("#calculate-hours").click(function (event) {
@@ -24,7 +81,9 @@ $("#calculate-hours").click(function (event) {
         const pointings = [];
         for (let iD = 1; iD <= numberDays; iD++) {
             pointings.push({
-                isHoliday:$(`#${iD}-ferier`).is(":checked"),
+                // isHoliday:$(`#${iD}-ferier`).is(":checked"),
+                isHoliday: false,
+                numberHoursFerier: $(`#${iD}-ferier`).val(),
                 weekOfDay: iD,
                 numberHoursDaily: $(`#${iD}-day`).val(),
                 numberHoursNightly: $(`#${iD}-night`).val()

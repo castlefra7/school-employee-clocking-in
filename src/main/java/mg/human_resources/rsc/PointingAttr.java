@@ -15,6 +15,15 @@ public class PointingAttr {
 
     private List<PointingDailyAttr> pointings;
     private EmployeeAttr employee;
+    private int semaine;
+
+    public int getSemaine() {
+        return semaine;
+    }
+
+    public void setSemaine(int semaine) {
+        this.semaine = semaine;
+    }
 
     public EmployeeAttr getEmployee() {
         return employee;

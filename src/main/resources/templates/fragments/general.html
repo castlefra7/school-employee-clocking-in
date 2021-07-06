@@ -54,8 +54,11 @@ and open the template in the editor.
                         <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{supplmax}">
                            Supplémentaire maximum
                         </a>
-                        <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/users}">
-                            Utilisateurs
+                        <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{supplmax}">
+                           Supplémentaire maximum
+                        </a>
+                        <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/stats}">
+                            Statistiques
                         </a>
 
                         <a  class="navbar-item" th:href="@{/employees-front}">

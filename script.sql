@@ -80,19 +80,29 @@ create table suppl_config_max (
     created_date timestamp not null default now()
 );
 
+create table pointages (
+    id serial primary key,
+    id_employee int,
+    id_semaine int not null check (id_semaine between 1 and 52),
+    code varchar(255) not null check (code <> ''),
+    hours double precision not null check ( hours >= 0),
+    percentage double precision not null check (percentage >= 0),
+    foreign key (id_employee) references employees(id)
+);
+
 /* DATA */
--- insert into employee_categories (name, standard_hour_per_day, day_week_start, day_week_end, standard_salary, indemnity_percent) values ('normal', 8, 1, 5, 100000, 0);
--- insert into employee_categories (name, standard_hour_per_day, day_week_start, day_week_end, standard_salary, indemnity_percent) values ('gardien', 8, 1, 7, 110000, 0);
+insert into employee_categories (name, standard_hour_per_day, day_week_start, day_week_end, standard_salary, indemnity_percent) values ('normal', 6, 1, 5, 200000, 0);
+insert into employee_categories (name, standard_hour_per_day, day_week_start, day_week_end, standard_salary, indemnity_percent) values ('gardien', 8, 1, 7, 110000, 0);
 
--- insert into employees (last_name, first_name, id_category, date_birth, date_begin_employment, date_end_employment, registration_number) values ('rakoto', 'soa', 1, '1980-02-05', '2021-01-01', null,  nextval('registrationnumber'));
--- insert into employees (last_name, first_name, id_category, date_birth, date_begin_employment, date_end_employment, registration_number) values ('ramano', 'mickael', 1, '1985-02-05', '2021-02-01', null,  nextval('registrationnumber'));
+insert into employees (last_name, first_name, id_category, date_birth, date_begin_employment, date_end_employment, registration_number) values ('rakoto', 'soa', 1, '1980-02-05', '2021-01-01', null,  nextval('registrationnumber'));
+insert into employees (last_name, first_name, id_category, date_birth, date_begin_employment, date_end_employment, registration_number) values ('ramano', 'mickael', 1, '1985-02-05', '2021-02-01', null,  nextval('registrationnumber'));
 
--- -- insert into majorer_config (majorer_type, code, percentage) values ('nuit', 'hm130', 0.3);
--- insert into majorer_config (majorer_type, code, percentage) values ('dimanche', 'hm140', 0.4);
--- insert into majorer_config (majorer_type, code, percentage) values ('ferier', 'hm150', 0.5);
+insert into majorer_config (majorer_type, code, percentage) values ('nuit', 'hm130', 0.3);
+insert into majorer_config (majorer_type, code, percentage) values ('dimanche', 'hm140', 0.4);
+insert into majorer_config (majorer_type, code, percentage) values ('ferier', 'hm150', 0.5);
 
--- insert into suppl_config (code, max_hour_per_period, period_type, percentage) values ('hs30', 8,'semaine', 0.30);
--- insert into suppl_config (code, max_hour_per_period, period_type, percentage) values ('hs50', 12,'semaine', 0.5);
+insert into suppl_config (code, max_hour_per_period, period_type, percentage) values ('hs30', 8,'semaine', 0.30);
+insert into suppl_config (code, max_hour_per_period, period_type, percentage) values ('hs50', 12,'semaine', 0.5);
 
 /* BASIC VIEWS */
 create view all_employee_categories_with_weekly_hour as select *, ((day_week_end - day_week_start + 1) * standard_hour_per_day) as weekly_hour from employee_categories;

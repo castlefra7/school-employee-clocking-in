@@ -36,7 +36,9 @@ public final class Employee extends BaseModel {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Timestamp date_end_employment;
     private int registration_number;
-
+    
+    
+    private int id_semaine;
     private EmployeeCategory category;
 
     public Employee() {
@@ -62,11 +64,59 @@ public final class Employee extends BaseModel {
         }
 
     }
+    
+
+    public EmployeePaie calculatePaie(int _id_emp, int _id_semaine) throws Exception {
+        logger.info(String.valueOf(_id_emp));
+        logger.info(String.valueOf(_id_semaine));
+        try (Connection conn = ConnGen.getConn()) {
+            EmployeePaie empPaie = new EmployeePaie();
+            List<BaseModel> pointages = new Pointage().findByIdAndWeek(_id_emp, _id_semaine, conn);
+            
+            List<EmployeeWeeklyHoursAndAmount> result = new ArrayList();
+            Employee desiredEmp = (Employee) new Employee().findById(_id_emp);
+            EmployeeCategory empCateg = desiredEmp.getCategory();
+            
+            double totalSalary = 0;
+            double baseHourlyRate = empCateg.getStandard_salary() / empCateg.getWeekly_hour();
+            for (BaseModel base : pointages) {
+               
+                Pointage hour = (Pointage)base;
+                if(hour.getPercentage() < 0) continue;
+                EmployeeWeeklyHoursAndAmount hourAmount = new EmployeeWeeklyHoursAndAmount(hour.getCode(), hour.getHours(), hour.getPercentage());
+                if (hour.getPercentage() > 0) {
+                    hourAmount.setHourlyRate(baseHourlyRate + (baseHourlyRate * hour.getPercentage()));
+                } else {
+                    hourAmount.setHourlyRate(baseHourlyRate);
+                }
+                hourAmount.setTotalAmount(hourAmount.getHours() * hourAmount.getHourlyRate());
+                totalSalary += hourAmount.getTotalAmount();
+                result.add(hourAmount);
+            }
+            empPaie.setPaie(result);
+            double indemnity = 0; // TODO HOW TO CALCULATE
+            double[] amounts = new double[2];
+            amounts[0] = indemnity;
+            amounts[1] = totalSalary;
+            empPaie.setAmounts(amounts);
+            return empPaie;
+        } catch (Exception ex) {
+            throw ex;
+        }
+    }
 
     public List<EmployeeWeeklyHours> calculateHours(PointingAttr pointing) throws Exception {
+        try (Connection conn = ConnGen.getConn()) {
+            return this.calculateHours(pointing, conn);
+        } catch (Exception ex) {
+            throw ex;
+        }
+    }
+
+    public List<EmployeeWeeklyHours> calculateHours(PointingAttr pointing, Connection conn) throws Exception {
         List<EmployeeWeeklyHours> result = new ArrayList();
 
-        try (Connection conn = ConnGen.getConn()) {
+        try {
             Employee desiredEmp = (Employee) new Employee().findById(pointing.getEmployee().getId());
             EmployeeCategory empCateg = desiredEmp.getCategory();
 
@@ -88,11 +138,12 @@ public final class Employee extends BaseModel {
                 throw new Exception("Veuillez entrez les heures majorées nuit, dimanche et férier");
             }
 
-            int totalWeeklyHours = 0;
-            int totalNightHours = 0;
-            int totalSundayHours = 0;
-            int totalFerierHours = 0;
-            int totalWorkedHours = 0;
+            float totalNightHours = 0;
+            float totalSundayHours = 0;
+            float totalWorkedFerierHours = 0;
+            float totalNotWorkedFerierHours = 0;
+            float totalDayHours = 0;
+            float totalWorkedHours = 0;
             List<PointingDailyAttr> dailyPoints = pointing.getPointings();
 
             List<BaseModel> suppls = new Supplementary().findAll(conn);
@@ -101,91 +152,42 @@ public final class Employee extends BaseModel {
                 PointingDailyAttr point = dailyPoints.get(iD);
                 totalWorkedHours += point.getNumberHoursDaily();
                 totalWorkedHours += point.getNumberHoursNightly();
-                if (point.isIsHoliday()) {
-                    if (point.getNumberHoursNightly() > 0 && point.getWeekOfDay() == 7) {
+                totalWorkedHours += point.getNumberHoursFerier();
+
+                if (point.getNumberHoursFerier() > 0) {
+                    totalNotWorkedFerierHours += point.getNumberHoursFerier();
+                    // NEED TO GET MAX FERIER, MAX DAY, MAX NIGHT ?
+                    totalWorkedFerierHours += point.getNumberHoursDaily();
+                    totalWorkedFerierHours += point.getNumberHoursNightly();
+                } else {
+                    if (point.getWeekOfDay() == 7) {
                         if (nightMaj.getPercentage() > sundayMaj.getPercentage()) {
-                            if (nightMaj.getPercentage() > ferierMaj.getPercentage()) {
-                                totalNightHours += point.getNumberHoursNightly();
-                                totalNightHours += point.getNumberHoursDaily();
-                            } else {
-                                totalFerierHours += point.getNumberHoursNightly();
-                                totalFerierHours += point.getNumberHoursDaily();
-                            }
-                        } else {
-                            if (sundayMaj.getPercentage() > ferierMaj.getPercentage()) {
-                                totalSundayHours += point.getNumberHoursNightly();
-                                totalSundayHours += point.getNumberHoursDaily();
-                            } else {
-                                totalFerierHours += point.getNumberHoursNightly();
-                                totalFerierHours += point.getNumberHoursDaily();
-                            }
-                        }
-                    } else if (point.getNumberHoursNightly() > 0) {
-                        if (nightMaj.getPercentage() > ferierMaj.getPercentage()) {
                             totalNightHours += point.getNumberHoursNightly();
                             totalNightHours += point.getNumberHoursDaily();
                         } else {
-                            totalFerierHours += point.getNumberHoursNightly();
-                            totalFerierHours += point.getNumberHoursDaily();
-                        }
-                    } else if (point.getWeekOfDay() == 7) {
-                        if (sundayMaj.getPercentage() > ferierMaj.getPercentage()) {
                             totalSundayHours += point.getNumberHoursNightly();
                             totalSundayHours += point.getNumberHoursDaily();
-                        } else {
-                            totalFerierHours += point.getNumberHoursNightly();
-                            totalFerierHours += point.getNumberHoursDaily();
                         }
                     } else {
-                        totalFerierHours += point.getNumberHoursDaily();
-                    }
-
-                    point.setNumberHoursDaily(0);
-                } else {
-                    if (point.getWeekOfDay() == 7) {
-                        if (point.getNumberHoursDaily() > 0) {
-                            if (nightMaj.getPercentage() > sundayMaj.getPercentage()) {
-                                totalNightHours += point.getNumberHoursNightly();
-                                totalNightHours += point.getNumberHoursDaily();
-                            } else {
-                                totalSundayHours += point.getNumberHoursNightly();
-                                totalSundayHours += point.getNumberHoursDaily();
-                            }
-                        } else {
-                            totalSundayHours += point.getNumberHoursDaily();
-                        }
-                        point.setNumberHoursDaily(0);
-                    } else {
+                        totalDayHours += point.getNumberHoursDaily();
                         totalNightHours += point.getNumberHoursNightly();
                     }
                 }
-                point.setNumberHoursNightly(0);
-                totalWeeklyHours += point.getNumberHoursDaily();
             }
 
-            // /* MAJORER */
-            for (BaseModel maj : majorer) {
-                Majorer ma = (Majorer) maj;
-                int totalHours = 0;
-                if ("nuit".equals(ma.getMajorer_type())) {
-                    totalHours = totalNightHours;
-                } else if ("dimanche".equals(ma.getMajorer_type())) {
-                    totalHours = totalSundayHours;
-                } else if ("ferier".equals(ma.getMajorer_type())) {
-                    totalHours = totalFerierHours;
-                }
-                result.add(new EmployeeWeeklyHours(ma.getCode(), totalHours));
-            }
+            double rateNormal = 0; // TODO: GET IT FROM DATABASE ?
+            result.add(new EmployeeWeeklyHours("Nb heures jour", totalDayHours, rateNormal));
+            result.add(new EmployeeWeeklyHours("Nb heures Nuit", totalNightHours, nightMaj.getPercentage()));
+            result.add(new EmployeeWeeklyHours("Nb heures Dimanche", totalSundayHours, sundayMaj.getPercentage()));
+            result.add(new EmployeeWeeklyHours("Nb heures jour férié où il a travaillé", totalWorkedFerierHours, ferierMaj.getPercentage()));
+            result.add(new EmployeeWeeklyHours("Nb heures jour férié", totalNotWorkedFerierHours, rateNormal));
 
-            // THE REMAINS IS SET TO SUPPLEMENTARY
-            
-            
-            int totalSupplHours = totalWeeklyHours > empCateg.getWeekly_hour() ? totalWeeklyHours - empCateg.getWeekly_hour() : 0;
-            int totalNormalHours = Math.min(totalWeeklyHours, empCateg.getWeekly_hour());
-            result.add(new EmployeeWeeklyHours("Heures normales", totalNormalHours));
+            // SUPPLEMENTARY
+            float totalSupplHours = totalWorkedHours > empCateg.getWeekly_hour() ? totalWorkedHours - empCateg.getWeekly_hour() : 0;
+
             for (BaseModel suppl : suppls) {
                 Supplementary supp = (Supplementary) suppl;
-                int totalHours = 0;
+                float totalHours = 0;
                 if (totalSupplHours <= supp.getMax_hour_per_period()) {
                     totalHours = totalSupplHours;
                 } else {
@@ -195,19 +197,18 @@ public final class Employee extends BaseModel {
                 if (totalHours <= 0) {
                     totalHours = 0;
                 }
-                result.add(new EmployeeWeeklyHours(supp.getCode(), totalHours));
+                result.add(new EmployeeWeeklyHours("Nb heures supp", totalHours, supp.getPercentage()));
             }
-            
-            result.add(new EmployeeWeeklyHours("Total Heures travaillées", totalWorkedHours));
+
+            //result.add(new EmployeeWeeklyHours("Total Heures travaillées", totalWorkedHours, ));
         } catch (Exception ex) {
             throw ex;
         }
 
         return result;
     }
-    
-    //
 
+    //
     @Override
     public void insert(Connection conn) throws Exception {
         String columns = "first_name;last_name;id_category;date_birth;date_begin_employment;date_end_employment;registration_number";
@@ -447,4 +448,134 @@ public final class Employee extends BaseModel {
 //     result.add(new EmployeeWeeklyHours(ma.getCode(), totalHours));
 // }
 // int bigTotalHours = normalHours + sumTotalSupplHours + totalNightlyHours + totalSundayHours + totalFerierHours;
-            // result.add(new EmployeeWeeklyHours("Total Heures", bigTotalHours));
+// result.add(new EmployeeWeeklyHours("Total Heures", bigTotalHours));
+// public List<EmployeeWeeklyHours> calculateHours(PointingAttr pointing) throws Exception {
+//     List<EmployeeWeeklyHours> result = new ArrayList();
+//     try (Connection conn = ConnGen.getConn()) {
+//         Employee desiredEmp = (Employee) new Employee().findById(pointing.getEmployee().getId());
+//         EmployeeCategory empCateg = desiredEmp.getCategory();
+//         List<BaseModel> majorer = new Majorer().findAll(conn);
+//         Majorer nightMaj = null;
+//         Majorer sundayMaj = null;
+//         Majorer ferierMaj = null;
+//         for (BaseModel maj : majorer) {
+//             Majorer ma = (Majorer) maj;
+//             if ("nuit".equals(ma.getMajorer_type())) {
+//                 nightMaj = ma;
+//             } else if ("dimanche".equals(ma.getMajorer_type())) {
+//                 sundayMaj = ma;
+//             } else if ("ferier".equals(ma.getMajorer_type())) {
+//                 ferierMaj = ma;
+//             }
+//         }
+//         if (nightMaj == null || sundayMaj == null || ferierMaj == null) {
+//             throw new Exception("Veuillez entrez les heures majorées nuit, dimanche et férier");
+//         }
+//         int totalWeeklyHours = 0;
+//         int totalNightHours = 0;
+//         int totalSundayHours = 0;
+//         int totalFerierHours = 0;
+//         int totalWorkedHours = 0;
+//         List<PointingDailyAttr> dailyPoints = pointing.getPointings();
+//         List<BaseModel> suppls = new Supplementary().findAll(conn);
+//         for (int iD = 0; iD < dailyPoints.size(); iD++) {
+//             PointingDailyAttr point = dailyPoints.get(iD);
+//             totalWorkedHours += point.getNumberHoursDaily();
+//             totalWorkedHours += point.getNumberHoursNightly();
+//             if (point.isIsHoliday()) {
+//                 if (point.getNumberHoursNightly() > 0 && point.getWeekOfDay() == 7) {
+//                     if (nightMaj.getPercentage() > sundayMaj.getPercentage()) {
+//                         if (nightMaj.getPercentage() > ferierMaj.getPercentage()) {
+//                             totalNightHours += point.getNumberHoursNightly();
+//                             totalNightHours += point.getNumberHoursDaily();
+//                         } else {
+//                             totalFerierHours += point.getNumberHoursNightly();
+//                             totalFerierHours += point.getNumberHoursDaily();
+//                         }
+//                     } else {
+//                         if (sundayMaj.getPercentage() > ferierMaj.getPercentage()) {
+//                             totalSundayHours += point.getNumberHoursNightly();
+//                             totalSundayHours += point.getNumberHoursDaily();
+//                         } else {
+//                             totalFerierHours += point.getNumberHoursNightly();
+//                             totalFerierHours += point.getNumberHoursDaily();
+//                         }
+//                     }
+//                 } else if (point.getNumberHoursNightly() > 0) {
+//                     if (nightMaj.getPercentage() > ferierMaj.getPercentage()) {
+//                         totalNightHours += point.getNumberHoursNightly();
+//                         totalNightHours += point.getNumberHoursDaily();
+//                     } else {
+//                         totalFerierHours += point.getNumberHoursNightly();
+//                         totalFerierHours += point.getNumberHoursDaily();
+//                     }
+//                 } else if (point.getWeekOfDay() == 7) {
+//                     if (sundayMaj.getPercentage() > ferierMaj.getPercentage()) {
+//                         totalSundayHours += point.getNumberHoursNightly();
+//                         totalSundayHours += point.getNumberHoursDaily();
+//                     } else {
+//                         totalFerierHours += point.getNumberHoursNightly();
+//                         totalFerierHours += point.getNumberHoursDaily();
+//                     }
+//                 } else {
+//                     totalFerierHours += point.getNumberHoursDaily();
+//                 }
+//                 point.setNumberHoursDaily(0);
+//             } else {
+//                 if (point.getWeekOfDay() == 7) {
+//                     if (point.getNumberHoursDaily() > 0) {
+//                         if (nightMaj.getPercentage() > sundayMaj.getPercentage()) {
+//                             totalNightHours += point.getNumberHoursNightly();
+//                             totalNightHours += point.getNumberHoursDaily();
+//                         } else {
+//                             totalSundayHours += point.getNumberHoursNightly();
+//                             totalSundayHours += point.getNumberHoursDaily();
+//                         }
+//                     } else {
+//                         totalSundayHours += point.getNumberHoursDaily();
+//                     }
+//                     point.setNumberHoursDaily(0);
+//                 } else {
+//                     totalNightHours += point.getNumberHoursNightly();
+//                 }
+//             }
+//             point.setNumberHoursNightly(0);
+//             totalWeeklyHours += point.getNumberHoursDaily();
+//         }
+//         // /* MAJORER */
+//         for (BaseModel maj : majorer) {
+//             Majorer ma = (Majorer) maj;
+//             int totalHours = 0;
+//             if ("nuit".equals(ma.getMajorer_type())) {
+//                 totalHours = totalNightHours;
+//             } else if ("dimanche".equals(ma.getMajorer_type())) {
+//                 totalHours = totalSundayHours;
+//             } else if ("ferier".equals(ma.getMajorer_type())) {
+//                 totalHours = totalFerierHours;
+//             }
+//             result.add(new EmployeeWeeklyHours(ma.getCode(), totalHours));
+//         }
+//         // THE REMAINS IS SET TO SUPPLEMENTARY
+//         int totalSupplHours = totalWeeklyHours > empCateg.getWeekly_hour() ? totalWeeklyHours - empCateg.getWeekly_hour() : 0;
+//         int totalNormalHours = Math.min(totalWeeklyHours, empCateg.getWeekly_hour());
+//         result.add(new EmployeeWeeklyHours("Heures normales", totalNormalHours));
+//         for (BaseModel suppl : suppls) {
+//             Supplementary supp = (Supplementary) suppl;
+//             int totalHours = 0;
+//             if (totalSupplHours <= supp.getMax_hour_per_period()) {
+//                 totalHours = totalSupplHours;
+//             } else {
+//                 totalHours = supp.getMax_hour_per_period();
+//             }
+//             totalSupplHours -= totalHours;
+//             if (totalHours <= 0) {
+//                 totalHours = 0;
+//             }
+//             result.add(new EmployeeWeeklyHours(supp.getCode(), totalHours));
+//         }
+//         result.add(new EmployeeWeeklyHours("Total Heures travaillées", totalWorkedHours));
+//     } catch (Exception ex) {
+//         throw ex;
+//     }
+//     return result;
+// }

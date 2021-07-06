@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <div th:replace="fragments/general.html :: head"></div>
+    <body id="pointage">
+        <div th:replace="fragments/general.html :: header"></div>
+
+        <div id="element-to-print" class="columns is-centered m-5">
+            <div class="column is-one-quarter">
+                <h1 class="is-size-1">Fiche de paie</h1>
+                <form th:object="${employee}"
+                      method="post"
+                      th:action="${isupdate != null && isupdate == true}?@{/employees-update}:@{/employees}"
+                      >
+                    <input type="hidden" th:field="*{id}" th:value="${employee.id}" />
+                    <div class="field">
+                        <label class="label">Date d'embauche</label>
+                        <div class="control">
+                            <input class="input" disabled  th:field="*{date_begin_employment}" type='datetime-local'/>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Catégorie</label>
+                        <div class="select">
+                            <select disabled class="input" th:field="*{id_category}">
+                                <option th:each='categ: ${categories}' th:text='${categ.getName()}' th:value="${categ.getId()}" />
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Nom</label>
+                        <div class="control">
+                            <input disabled class="input" th:field="*{last_name}" type='text'/>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Prénom</label>
+                        <div class="control">
+                            <input disabled class="input" th:field="*{first_name}" type='text'/>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Date de naissance</label>
+                        <div class="control">
+                            <input disabled class="input"  th:field="*{date_birth}" type='datetime-local'/>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Date fin de contrant</label>
+                        <div class="control">
+                            <input disabled class="input"  th:field="*{date_end_employment}" type='datetime-local'/>
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+
+            <div class="column">
+                <div class="columns">
+                    <div class="column is-one-half">
+                        <button id="validate-hours" class="button is-primary">Exporter PDF</button>
+                        <table id="table-hours" class="table is-bordered mt-2">
+                            <thead>
+                                <tr>
+                                    <th>Désignation</th>
+                                    <th>Total Heures</th>
+                                    <th>Taux horaire</th>
+                                    <th>montant</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="paie: ${paies}">
+                                    <td th:text="${paie.getCode()}" />
+                                    <td th:text="${paie.getHours()} + ' Hr'" />
+                                    <td th:text="${#numbers.formatDecimal(paie.getHourlyRate(),3,'POINT',2,'COMMA')} + ' Ar'" />
+                                    <td th:text="${#numbers.formatDecimal(paie.getTotalAmount(),3,'POINT',2,'COMMA')} + ' Ar'" />
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td colspan="2">Indemnité</td>
+                                    <td th:text="${#numbers.formatDecimal(amounts[0],3,'POINT',2,'COMMA')} + ' Ar'" />
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td colspan="2">Total à payer</td>
+                                    <td th:text="${#numbers.formatDecimal(amounts[1],3,'POINT',2,'COMMA')} + ' Ar'" />
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div th:replace="fragments/general.html :: footer"></div>
+    </body>
+</html> 
