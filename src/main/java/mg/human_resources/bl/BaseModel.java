@@ -8,6 +8,8 @@ package mg.human_resources.bl;
 import java.sql.Connection;
 import java.util.List;
 import mg.human_resources.conn.ConnGen;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -45,12 +47,14 @@ public abstract class BaseModel implements DaoInterface {
         }
     }
 
+    Logger logger = LoggerFactory.getLogger(BaseModel.class);
     @Override
     public void insert() throws Exception {
         try (Connection conn = ConnGen.getConn()) {
             this.insert(conn);
         } catch (Exception ex) {
-            throw ex;
+            logger.info(ex.getMessage());
+            throw new Exception("Veuillez vérifier vos données");
         }
     }
 

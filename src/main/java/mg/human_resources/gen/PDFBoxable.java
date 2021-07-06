@@ -12,7 +12,9 @@ import be.quodlibet.boxable.utils.PDStreamUtils;
 import be.quodlibet.boxable.utils.PageContentStreamOptimized;
 import java.awt.Color;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import mg.human_resources.bl.Employee;
 import mg.human_resources.bl.EmployeePaie;
 import mg.human_resources.bl.EmployeeWeeklyHoursAndAmount;
@@ -113,26 +115,27 @@ public class PDFBoxable {
         cell = headerRow.createCell(20, "Total Horaire");
         cell = headerRow.createCell(20, "Montant");
         table.addHeaderRow(headerRow);
+        
 
         List<EmployeeWeeklyHoursAndAmount> paies = empPaie.getPaie();
         String curr = " Ar";
         for (EmployeeWeeklyHoursAndAmount paie : paies) {
             Row<PDPage> row = table.createRow(12);
             cell = row.createCell(40, paie.getCode());
-            cell = row.createCell(20, String.valueOf(paie.getHours()));
-            cell = row.createCell(20, String.valueOf(paie.getHourlyRate()) + curr);
-            cell = row.createCell(20, String.valueOf(paie.getTotalAmount()) + curr);
+            cell = row.createCell(20, String.format("%.2f", paie.getHours()));
+            cell = row.createCell(20, String.format("%.2f", paie.getHourlyRate()) + curr);
+            cell = row.createCell(20, String.format("%.2f",paie.getTotalAmount()) + curr);
         }
 
         Row<PDPage> row = table.createRow(12);
         cell = row.createCell(40, "");
         cell = row.createCell(40, "Indemnité");
-        cell = row.createCell(20, String.valueOf(empPaie.getAmounts()[0]));
+        cell = row.createCell(20, String.format("%.2f", empPaie.getAmounts()[0]));
         
         Row<PDPage> rowTot = table.createRow(12);
         cell = rowTot.createCell(40, "");
         cell = rowTot.createCell(40, "Total à payer");
-        cell = rowTot.createCell(20, String.valueOf(empPaie.getAmounts()[1]));
+        cell = rowTot.createCell(20, String.format("%.2f", empPaie.getAmounts()[1]));
 
         table.draw();
     }

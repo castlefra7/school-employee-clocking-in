@@ -32,8 +32,11 @@
                             <td th:text="${emp.getDate_begin_employment()}" />
                             <td th:text="${emp.getDate_end_employment()}" />
                             <td>
-                                <a th:href="@{/employees-pointage-front/{id}(id=${emp.getId()})}" class="button is-primary">Pointage</a>
-                                <a th:href="@{/employees-fiche-front/{id}(id=${emp.getId()})}" class="button is-primary">Fiche Paie</a>
+                                <div class="buttons">
+                                    <a th:href="@{/employees-pointage-front/{id}(id=${emp.getId()})}" class="button is-primary">Pointage</a>
+                                    <a th:href="@{/employees-fiche-front/{id}(id=${emp.getId()})}" class="button is-primary">Fiche Paie</a>
+                                </div>
+                                
                             </td>
                         </tr>
                     </tbody>

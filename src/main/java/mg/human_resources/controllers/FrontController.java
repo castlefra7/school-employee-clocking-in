@@ -39,7 +39,7 @@ Logger logger = LoggerFactory.getLogger(AdminController.class);
     @GetMapping("/download-pdf/{filename:.+}")
     public ResponseEntity downloadPdf(@RequestParam(name = "id-emp", required = false, defaultValue = "0") int id_emp,
             @RequestParam(name = "id-semaine", required = false, defaultValue = "0") int id_semaine) throws Exception {
-        new Employee().savePDF(uploadDir, id_emp);
+        new Employee().savePDF(uploadDir, id_emp, id_semaine);
         
         Path path = Paths.get(uploadDir);
         Resource resource;

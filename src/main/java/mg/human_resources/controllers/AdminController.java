@@ -38,7 +38,7 @@ public class AdminController {
 
     Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-    private int count_per_page = 10;
+    private int count_per_page = 5;
 
     /* STATS */
     @GetMapping("/stats")
@@ -50,6 +50,8 @@ public class AdminController {
         model.addAttribute("id_semaine", id_semaine);
         model.addAttribute("employees", emp.findAllPage(null, page, count_per_page));
         model.addAttribute("statsHours", emp.sumHoursAndAmount());
+        model.addAttribute("numberpages", emp.numberPage(count_per_page));
+        model.addAttribute("page", page);
         return "employees-stats";
     }
 

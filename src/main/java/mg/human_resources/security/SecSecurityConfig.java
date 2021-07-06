@@ -48,6 +48,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 
                 .antMatchers("/employees-front/**").authenticated()
                 .antMatchers("/employees-pointage-front/**").authenticated()
+                .antMatchers("/employees-fiche-front/**").authenticated()
                        
                 //.anyRequest().permitAll()
                 //.anyRequest().authenticated()

@@ -71,16 +71,17 @@ public final class Employee extends BaseModel {
         }
     }
     
-    public void savePDF(String dir, int id_emp) throws IOException, Exception {
+    public void savePDF(String dir, int id_emp, int _id_semaine) throws IOException, Exception {
         PDFBoxable boxable = new PDFBoxable();
         boxable.drawPageTitle();
         boxable.setUploadDir(dir);
 
-        boxable.id_semaine = id_semaine;
+        boxable.id_semaine = _id_semaine;
         Employee emp = (Employee) new Employee().findById(id_emp);
         boxable.drawEmployeeInf(emp);
+        logger.info(String.valueOf(boxable.id_semaine) + " "  + String.valueOf(id_emp));
         
-        EmployeePaie empPaie = new Employee().calculatePaie(id_emp, id_semaine);
+        EmployeePaie empPaie = new Employee().calculatePaie(id_emp, _id_semaine);
         boxable.drawTablePaie(empPaie);
         boxable.save();
     }
@@ -158,6 +159,9 @@ public final class Employee extends BaseModel {
                 indemnity = 0;
                 prorata = (empCateg.getWeekly_hour() - totalHours) * baseHourlyRate;
             }
+            if(totalHours <= 0) {
+                indemnity = 0;
+            }
             amounts[0] = indemnity;
 
             amounts[1] = _totalSalary + indemnity - prorata;
@@ -220,6 +224,9 @@ public final class Employee extends BaseModel {
                 }
                 if(point.getNumberHoursDaily() > 17 || point.getNumberHoursNightly() > 7) {
                     throw new Exception("Veuillez spécifier aux plus 17 h pour le jour et 7 h pour la nuit");
+                }
+                if(point.getNumberHoursFerier() > 24) {
+                    throw new Exception("Veuillez spécifier un nombre d'heures < 24");
                 }
                 totalWorkedHours += point.getNumberHoursDaily();
                 totalWorkedHours += point.getNumberHoursNightly();

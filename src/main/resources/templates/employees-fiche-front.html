@@ -67,6 +67,8 @@
                             </div>
                             <input type="submit" class="button is-primary is-small is-fullwidth" value="Valider" />
                         </form>
+
+
                         <a th:href='@{/download-pdf/fiche_paie.pdf(id-emp=${id_emp}, id-semaine=${id_semaine})}' class="button is-small is-primary my-2">Exporter PDF</a>
                         <table id="table-hours" class="table is-bordered mt-2">
                             <thead>
@@ -79,10 +81,17 @@
                             </thead>
                             <tbody>
                                 <tr th:each="paie: ${paies}">
-                                    <td th:text="${paie.getCode()}" />
+
+                                    <td th:if="${paie.getPercentage() > 0}" th:text="${paie.getCode() + ' (' + (paie.getPercentage()*100) + ' %)' }" />
+                                    <td th:if="${paie.getPercentage() <= 0}" th:text="${paie.getCode()}" />
                                     <td th:text="${paie.getHours()} + ' Hr'" />
                                     <td th:text="${#numbers.formatDecimal(paie.getHourlyRate(),3,'POINT',2,'COMMA')} + ' Ar'" />
                                     <td th:text="${#numbers.formatDecimal(paie.getTotalAmount(),3,'POINT',2,'COMMA')} + ' Ar'" />
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td colspan="2">Total Heures</td>
+                                    <td th:text="${amounts[2]}" />
                                 </tr>
                                 <tr>
                                     <td></td>

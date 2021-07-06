@@ -35,13 +35,23 @@
                             <td th:text="${emp.getLast_name()}" />
                             <td th:text="${emp.getFirst_name()}" />
                             <td th:text="${emp.getCategory().getName()}" />
-                            <td th:text="${emp.getCategory().getStandard_salary()}" />
+                            <td th:text="${#numbers.formatDecimal(emp.getCategory().getStandard_salary(),3,'POINT',2,'COMMA')} + ' Ar'" />
                             <td th:text="${#numbers.formatDecimal(emp.getTotalSalary(),3,'POINT',2,'COMMA')} + ' Ar'" />
                         </tr>
                     </tbody>
                 </table>
 
-
+ <nav th:if="${numberpages > 0}" class="pagination is-centered" role="navigation" aria-label="pagination">
+                    <a th:href="@{/stats(page=${prev})}"  class="pagination-previous">Previous</a>
+                    <a th:href="@{/stats(page=${next})}" class="pagination-next">Next page</a>
+                    <ul class="pagination-list">
+                        <li  th:each="iter: ${#numbers.sequence(1, __${numberpages}__)}">
+                            <a
+                                th:classappend="${(iter-1== page) ? 'is-current': ''}"
+                                th:href="@{/stats(page=${iter-1})}"
+                                th:text="${iter}" class="pagination-link">-1</a></li>
+                    </ul>
+                </nav>
             </div>
 
 

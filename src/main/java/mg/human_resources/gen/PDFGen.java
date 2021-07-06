@@ -8,7 +8,6 @@ package mg.human_resources.gen;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import mg.starter.starter_boilerplate.bl.test.Example;
@@ -18,7 +17,6 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.util.Matrix;
 
 /**
  *
