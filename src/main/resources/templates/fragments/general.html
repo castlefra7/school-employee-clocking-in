@@ -38,21 +38,17 @@ and open the template in the editor.
 
                 <div id="navbarBasicExample" class="navbar-menu">
                     <div  sec:authorize="isAuthenticated()" class="navbar-start">
-
                         <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/categories}">
-                            Liste catégories
+                            Catégories
                         </a>
                         <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/employees}">
-                            Liste employés
+                            Employés
                         </a>
                         <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/supplementaries}">
-                            Liste supplémentaires
+                            Supplémentaires
                         </a>
                         <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/majorees}">
-                            Liste majorées
-                        </a>
-                        <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{supplmax}">
-                           Supplémentaire maximum
+                            Majorées
                         </a>
                         <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{supplmax}">
                            Supplémentaire maximum
@@ -60,9 +56,13 @@ and open the template in the editor.
                         <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/stats}">
                             Statistiques
                         </a>
+                        <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/users}">
+                            Utilisateurs
+                        </a>
+                    
 
                         <a  class="navbar-item" th:href="@{/employees-front}">
-                            Liste employés Front
+                            Employés Front
                         </a>
 
                     </div>

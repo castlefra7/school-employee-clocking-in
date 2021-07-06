@@ -38,17 +38,24 @@ public class AdminController {
 
     Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-    private int count_per_page = 5;
-    
+    private int count_per_page = 10;
+
     /* STATS */
     @GetMapping("/stats")
-    public String getStats(Model model, @RequestParam(name = "page", required = false, defaultValue = "0") int page) throws Exception {
-        model.addAttribute("employees", new Employee().findAllPage(null, page, count_per_page));
+    public String getStats(Model model, @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "id-semaine", required = false, defaultValue = "1") int id_semaine) throws Exception {
+        Employee emp = new Employee();
+        emp.setId_semaine(id_semaine);
+        emp.setIsStat(true);
+        model.addAttribute("id_semaine", id_semaine);
+        model.addAttribute("employees", emp.findAllPage(null, page, count_per_page));
+        model.addAttribute("statsHours", emp.sumHoursAndAmount());
         return "employees-stats";
     }
+
     /* END STATS */
 
-    /* CRUD SUPPL MAX  */
+ /* CRUD SUPPL MAX  */
     @GetMapping("/supplmax/{id}")
     public String getSupplMaxDetail(@PathVariable("id") int id, Model model) throws Exception {
         model.addAttribute("supplAttr", new MaxSupplConfig().findById(id));
@@ -59,9 +66,8 @@ public class AdminController {
 
     @GetMapping("/supplmax-form")
     public String getSupplMaxForm(Model model) throws Exception {
-
         MaxSupplConfig maj = new MaxSupplConfig();
-        
+
         model.addAttribute("supplAttr", maj);
         model.addAttribute("supplmaxes", new MaxSupplConfig().findAll());
         return "supplmax-form-back";
@@ -111,7 +117,6 @@ public class AdminController {
 
     @GetMapping("/majorees-form")
     public String getMajorerForm(Model model) throws Exception {
-
         MajorerAttr maj = new MajorerAttr();
         maj.setCode("hm60");
         maj.setMajorer_type("nuit");

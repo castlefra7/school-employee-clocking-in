@@ -44,6 +44,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users/**").hasAuthority(AdminAuthority.ADMIN)
                 .antMatchers("/supplmax/**").hasAuthority(AdminAuthority.ADMIN)
                 .antMatchers("/supplmax-form/**").hasAuthority(AdminAuthority.ADMIN)
+                .antMatchers("/stats/**").hasAuthority(AdminAuthority.ADMIN)
                 
                 .antMatchers("/employees-front/**").authenticated()
                 .antMatchers("/employees-pointage-front/**").authenticated()

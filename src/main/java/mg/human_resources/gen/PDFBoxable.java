@@ -14,6 +14,8 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.List;
 import mg.human_resources.bl.Employee;
+import mg.human_resources.bl.EmployeePaie;
+import mg.human_resources.bl.EmployeeWeeklyHoursAndAmount;
 import mg.human_resources.rsc.PointingAttr;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -39,6 +41,8 @@ public class PDFBoxable {
     private int yPosition = 700;
     private float pFontSize = 12;
 
+    public int id_semaine = -1;
+
     public PDFBoxable() throws IOException {
         page = new PDPage(PDRectangle.A4);
         mainDocument = new PDDocument();
@@ -48,11 +52,11 @@ public class PDFBoxable {
 
     public void drawPageTitle() throws IOException {
 
-        PDStreamUtils.write(cos, "Information employé", font, titleFontSize, leftMargin, yPosition,
+        PDStreamUtils.write(cos, "Fiche de paie", font, titleFontSize, leftMargin, yPosition,
                 Color.BLACK);
 
         // drop Y position with default margin between vertical elements
-        yPosition -= marginBetweenYElements;
+        yPosition -= (marginBetweenYElements * 2);
     }
 
     public void drawEmployeeInf(Employee employee) throws Exception {
@@ -63,6 +67,10 @@ public class PDFBoxable {
 
         PDStreamUtils.write(cos, "Catégorie:", font, pFontSize, leftMargin, yPosition, Color.BLACK);
         PDStreamUtils.write(cos, employee.getCategory().getName(), font, pFontSize, _leftMargin, yPosition, Color.BLACK);
+        yPosition -= marginBetweenYElements;
+
+        PDStreamUtils.write(cos, "Salaire base:", font, pFontSize, leftMargin, yPosition, Color.BLACK);
+        PDStreamUtils.write(cos, String.valueOf(employee.getCategory().getStandard_salary()), font, pFontSize, _leftMargin, yPosition, Color.BLACK);
         yPosition -= marginBetweenYElements;
 
         PDStreamUtils.write(cos, "Nom:", font, pFontSize, leftMargin, yPosition, Color.BLACK);
@@ -76,9 +84,14 @@ public class PDFBoxable {
         PDStreamUtils.write(cos, "Date de naissance:", font, pFontSize, leftMargin, yPosition, Color.BLACK);
         PDStreamUtils.write(cos, employee.getDate_birth().toString(), font, pFontSize, _leftMargin, yPosition, Color.BLACK);
         yPosition -= marginBetweenYElements;
+
+        PDStreamUtils.write(cos, "Semaine:", font, pFontSize, leftMargin, yPosition, Color.BLACK);
+        PDStreamUtils.write(cos, String.valueOf(id_semaine), font, pFontSize, _leftMargin, yPosition, Color.BLACK);
+        yPosition -= marginBetweenYElements;
+        
     }
 
-    public void drawTablePointings(List<PointingAttr> pointings) throws IOException {
+    public void drawTablePaie(EmployeePaie empPaie) throws IOException {
         //Dummy Table
         float margin = 50;
 // starting y position is whole page height subtracted by top and bottom margin
@@ -90,26 +103,58 @@ public class PDFBoxable {
         float yStart = yStartNewPage;
         float bottomMargin = 70;
 // y position is your coordinate of top left corner of the table
-        float yPosition = 550;
+        float yPosition = 450;
 
         BaseTable table = new BaseTable(yPosition, yStartNewPage, bottomMargin, tableWidth, margin, mainDocument, page, true, drawContent);
 
-        Row<PDPage> headerRow = table.createRow(30f);
-        Cell<PDPage> cell = headerRow.createCell(100, "Header");
+        Row<PDPage> headerRow = table.createRow(15f);
+        Cell<PDPage> cell = headerRow.createCell(40, "Désignation");
+        cell = headerRow.createCell(20, "Total Heures");
+        cell = headerRow.createCell(20, "Total Horaire");
+        cell = headerRow.createCell(20, "Montant");
         table.addHeaderRow(headerRow);
 
+        List<EmployeeWeeklyHoursAndAmount> paies = empPaie.getPaie();
+        String curr = " Ar";
+        for (EmployeeWeeklyHoursAndAmount paie : paies) {
+            Row<PDPage> row = table.createRow(12);
+            cell = row.createCell(40, paie.getCode());
+            cell = row.createCell(20, String.valueOf(paie.getHours()));
+            cell = row.createCell(20, String.valueOf(paie.getHourlyRate()) + curr);
+            cell = row.createCell(20, String.valueOf(paie.getTotalAmount()) + curr);
+        }
+
         Row<PDPage> row = table.createRow(12);
-        cell = row.createCell(30, "Data 1");
-        cell = row.createCell(70, "Some value");
+        cell = row.createCell(40, "");
+        cell = row.createCell(40, "Indemnité");
+        cell = row.createCell(20, String.valueOf(empPaie.getAmounts()[0]));
+        
+        Row<PDPage> rowTot = table.createRow(12);
+        cell = rowTot.createCell(40, "");
+        cell = rowTot.createCell(40, "Total à payer");
+        cell = rowTot.createCell(20, String.valueOf(empPaie.getAmounts()[1]));
 
         table.draw();
     }
 
+    private String uploadDir;
+    
     public void save() throws IOException {
         cos.close();
         oldCos.close();
         mainDocument.addPage(page);
-        mainDocument.save("testfile.pdf");
+        
+        mainDocument.save(this.getUploadDir());
         mainDocument.close();
     }
+
+    public String getUploadDir() {
+        return uploadDir;
+    }
+
+    public void setUploadDir(String uploadDir) {
+        this.uploadDir = uploadDir;
+    }
+    
+    
 }

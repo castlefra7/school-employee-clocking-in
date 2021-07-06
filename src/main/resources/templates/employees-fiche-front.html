@@ -53,14 +53,21 @@
                         </div>
                     </div>
                 </form>
-
-
             </div>
 
             <div class="column">
                 <div class="columns">
                     <div class="column is-one-half">
-                        <button id="validate-hours" class="button is-primary">Exporter PDF</button>
+                        <form style="max-width: 15%;" th:action='@{/employees-fiche-front/} + ${id_emp} '>
+                            <div class="field">
+                                <label class="label">Semaine</label>
+                                <div class="control">
+                                    <input class="input" name="id-semaine" th:value="${id_semaine}" type='text'/>
+                                </div>
+                            </div>
+                            <input type="submit" class="button is-primary is-small is-fullwidth" value="Valider" />
+                        </form>
+                        <a th:href='@{/download-pdf/fiche_paie.pdf(id-emp=${id_emp}, id-semaine=${id_semaine})}' class="button is-small is-primary my-2">Exporter PDF</a>
                         <table id="table-hours" class="table is-bordered mt-2">
                             <thead>
                                 <tr>

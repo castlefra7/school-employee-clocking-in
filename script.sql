@@ -91,11 +91,11 @@ create table pointages (
 );
 
 /* DATA */
-insert into employee_categories (name, standard_hour_per_day, day_week_start, day_week_end, standard_salary, indemnity_percent) values ('normal', 6, 1, 5, 200000, 0);
-insert into employee_categories (name, standard_hour_per_day, day_week_start, day_week_end, standard_salary, indemnity_percent) values ('gardien', 8, 1, 7, 110000, 0);
+-- insert into employee_categories (name, standard_hour_per_day, day_week_start, day_week_end, standard_salary, indemnity_percent) values ('normal', 8, 1, 7, 11, 0.3);
+-- insert into employee_categories (name, standard_hour_per_day, day_week_start, day_week_end, standard_salary, indemnity_percent) values ('gardien', 8, 1, 7, 110000, 0.3);
 
-insert into employees (last_name, first_name, id_category, date_birth, date_begin_employment, date_end_employment, registration_number) values ('rakoto', 'soa', 1, '1980-02-05', '2021-01-01', null,  nextval('registrationnumber'));
-insert into employees (last_name, first_name, id_category, date_birth, date_begin_employment, date_end_employment, registration_number) values ('ramano', 'mickael', 1, '1985-02-05', '2021-02-01', null,  nextval('registrationnumber'));
+-- insert into employees (last_name, first_name, id_category, date_birth, date_begin_employment, date_end_employment, registration_number) values ('rakoto', 'soa', 1, '1980-02-05', '2021-01-01', null,  nextval('registrationnumber'));
+-- insert into employees (last_name, first_name, id_category, date_birth, date_begin_employment, date_end_employment, registration_number) values ('ramano', 'mickael', 1, '1985-02-05', '2021-02-01', null,  nextval('registrationnumber'));
 
 insert into majorer_config (majorer_type, code, percentage) values ('nuit', 'hm130', 0.3);
 insert into majorer_config (majorer_type, code, percentage) values ('dimanche', 'hm140', 0.4);
@@ -104,8 +104,11 @@ insert into majorer_config (majorer_type, code, percentage) values ('ferier', 'h
 insert into suppl_config (code, max_hour_per_period, period_type, percentage) values ('hs30', 8,'semaine', 0.30);
 insert into suppl_config (code, max_hour_per_period, period_type, percentage) values ('hs50', 12,'semaine', 0.5);
 
+insert into suppl_config_max (max_hour_supp) values (20);
+
 /* BASIC VIEWS */
 create view all_employee_categories_with_weekly_hour as select *, ((day_week_end - day_week_start + 1) * standard_hour_per_day) as weekly_hour from employee_categories;
 
 create view all_employees_with_categ as select employees.id as id_emp, employees.first_name, employees.last_name,employees.id_category, employees.date_birth, employees.date_begin_employment, employees.date_end_employment, employees.registration_number, all_employee_categories_with_weekly_hour.standard_hour_per_day, all_employee_categories_with_weekly_hour.day_week_start, all_employee_categories_with_weekly_hour.day_week_end, all_employee_categories_with_weekly_hour.standard_salary, all_employee_categories_with_weekly_hour.indemnity_percent, all_employee_categories_with_weekly_hour.weekly_hour,
 all_employee_categories_with_weekly_hour.name from all_employee_categories_with_weekly_hour join employees on employees.id_category = all_employee_categories_with_weekly_hour.id order by employees.registration_number;
+

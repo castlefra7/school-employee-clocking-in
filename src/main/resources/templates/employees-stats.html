@@ -4,19 +4,20 @@
     <body>
         <div th:replace="fragments/general.html :: header"></div>
 
-        <div class="columns is-centered m-5">
-            <div class="column is-full">
+        <div class="columns m-5">
+            <div class="column is-half">
                 <h1 class="is-size-1">Statistiques</h1>
-                <form >
+
+                <form method="get" th:action="@{/stats}" >
                     <div class="field">
                         <label>Semaine</label>
                         <div class="control">
-                            <input style="max-width: 25%;" id="id-semaine" class="input" value="1" type='number'/>
+                            <input style="max-width: 25%;" name="id-semaine" id="id-semaine" class="input" value="1" type='number'/>
                         </div>
                     </div>
-                    <input type='button' class='button is-primary' value="Valider" />
-
+                    <input id="stat-id-semaine" type='submit' class='button is-primary' value="Valider" />
                 </form>
+                <p>Semaine <span th:text="${id_semaine}" /> </p>
                 <table class="table is-bordered mt-2">
                     <thead>
                         <tr>
@@ -24,7 +25,7 @@
                             <th>Nom</th>
                             <th>Prénom</th>
                             <th>Catégorie</th>
-                            <th>Salaire</th>
+                            <th>Salaire Base</th>
                             <th>Salaire à payer</th>
                         </tr>
                     </thead>
@@ -35,25 +36,32 @@
                             <td th:text="${emp.getFirst_name()}" />
                             <td th:text="${emp.getCategory().getName()}" />
                             <td th:text="${emp.getCategory().getStandard_salary()}" />
-                            <td th:text="${emp.getDate_birth()}" />
-                            <td th:text="${emp.getDate_begin_employment()}" />
-                            <td th:text="${emp.getDate_end_employment()}" />
+                            <td th:text="${#numbers.formatDecimal(emp.getTotalSalary(),3,'POINT',2,'COMMA')} + ' Ar'" />
                         </tr>
                     </tbody>
                 </table>
 
-                <nav th:if="${numberpages > 0}" class="pagination is-centered" role="navigation" aria-label="pagination">
-                    <a th:href="@{/employees-front(page=${prev})}"  class="pagination-previous">Previous</a>
-                    <a th:href="@{/employees-front(page=${next})}" class="pagination-next">Next page</a>
-                    <ul class="pagination-list">
-                        <li  th:each="iter: ${#numbers.sequence(1, __${numberpages}__)}">
-                            <a
-                                th:classappend="${(iter-1== page) ? 'is-current': ''}"
-                                th:href="@{/employees-front(page=${iter-1})}"
-                                th:text="${iter}" class="pagination-link">-1</a></li>
-                    </ul>
-                </nav>
 
+            </div>
+
+
+            <div class="column">
+                <table id="table-hours" class="table is-bordered mt-2">
+                    <thead>
+                        <tr>
+                            <th>Désignation</th>
+                            <th>Total Heures</th>
+                            <th>Total montant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="stat: ${statsHours}">
+                            <td th:text="${stat.getCode()}" />
+                            <td th:text="${stat.getHours()} + ' Hr'" />
+                            <td th:text="${#numbers.formatDecimal(stat.getTotalAmount(),3,'POINT',2,'COMMA')} + ' Ar'" />
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
         <div th:replace="fragments/general.html :: footer"></div>

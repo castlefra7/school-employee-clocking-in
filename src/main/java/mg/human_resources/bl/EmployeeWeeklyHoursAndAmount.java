@@ -14,6 +14,9 @@ public class EmployeeWeeklyHoursAndAmount extends EmployeeWeeklyHours {
     private double hourlyRate;
     private double totalAmount;
     
+    public EmployeeWeeklyHoursAndAmount() {
+        
+    }
     
     public EmployeeWeeklyHoursAndAmount(String _code, float _hours, double _percent) {
         this.setCode(_code);

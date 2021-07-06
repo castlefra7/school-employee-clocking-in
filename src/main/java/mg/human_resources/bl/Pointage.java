@@ -36,6 +36,10 @@ public class Pointage extends BaseModel {
         try {
             conn = ConnGen.getConn();
             conn.setAutoCommit(false);
+            
+            String reqDel = String.format("delete from pointages where id_employee = %d and id_semaine = %d", attr.getEmployee().getId(),
+                    attr.getSemaine());
+            FctGen.update(reqDel, conn);
 
             List<EmployeeWeeklyHours> allHours = new Employee().calculateHours(attr, conn);
 
