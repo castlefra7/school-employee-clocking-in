@@ -187,6 +187,9 @@ public final class Employee extends BaseModel {
 
         try {
             Employee desiredEmp = (Employee) new Employee().findById(pointing.getEmployee().getId());
+            if(desiredEmp.getDate_end_employment() != null) {
+                throw new Exception("Date fin embauche");
+            }
             EmployeeCategory empCateg = desiredEmp.getCategory();
 
             List<BaseModel> majorer = new Majorer().findAll(conn);
