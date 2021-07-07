@@ -142,7 +142,12 @@ public final class Employee extends BaseModel {
                 }
                 EmployeeWeeklyHoursAndAmount hourAmount = new EmployeeWeeklyHoursAndAmount(hour.getCode(), hour.getHours(), hour.getPercentage());
                 if (hour.getPercentage() > 0) {
-                    hourAmount.setHourlyRate(baseHourlyRate + (baseHourlyRate * hour.getPercentage()));
+                    if(hour.getCode().toLowerCase().contains("supp")) {
+                        hourAmount.setHourlyRate((baseHourlyRate * hour.getPercentage()));
+                    } else {
+                        hourAmount.setHourlyRate(baseHourlyRate + (baseHourlyRate * hour.getPercentage()));
+                    }
+                    
                 } else {
                     hourAmount.setHourlyRate(baseHourlyRate);
                 }
@@ -153,7 +158,7 @@ public final class Employee extends BaseModel {
             }
             empPaie.setPaie(result);
             double indemnity = empCateg.getStandard_salary() * empCateg.getIndemnity_percent(); // TODO HOW TO CALCULATE base salary * percent_indemnity
-            double[] amounts = new double[3];
+            double[] amounts = new double[4];
             double prorata = 0;
             if (totalHours < empCateg.getWeekly_hour() && totalHours > 0) {
                 indemnity = 0;
@@ -166,6 +171,7 @@ public final class Employee extends BaseModel {
 
             amounts[1] = _totalSalary + indemnity - prorata;
             amounts[2] = totalHours;
+            amounts[3] = _totalSalary;
             empPaie.setAmounts(amounts);
 
             return empPaie;

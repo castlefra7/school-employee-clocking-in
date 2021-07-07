@@ -109,12 +109,12 @@ insert into employee_categories (name, standard_hour_per_day, day_week_start, da
 -- insert into employees (last_name, first_name, id_category, date_birth, date_begin_employment, date_end_employment, registration_number) values ('rakoto', 'soa', 1, '1980-02-05', '2021-01-01', null,  nextval('registrationnumber'));
 -- insert into employees (last_name, first_name, id_category, date_birth, date_begin_employment, date_end_employment, registration_number) values ('ramano', 'mickael', 1, '1985-02-05', '2021-02-01', null,  nextval('registrationnumber'));
 
--- insert into majorer_config (majorer_type, code, percentage) values ('nuit', 'hm130', 0.3);
--- insert into majorer_config (majorer_type, code, percentage) values ('dimanche', 'hm140', 0.4);
--- insert into majorer_config (majorer_type, code, percentage) values ('ferier', 'hm150', 0.5);
+insert into majorer_config (majorer_type, code, percentage) values ('nuit', 'hm130', 0.3);
+insert into majorer_config (majorer_type, code, percentage) values ('dimanche', 'hm140', 0.4);
+insert into majorer_config (majorer_type, code, percentage) values ('ferier', 'hm150', 0.5);
 
--- insert into suppl_config (code, max_hour_per_period, period_type, percentage) values ('hs30', 8,'semaine', 0.30);
--- insert into suppl_config (code, max_hour_per_period, period_type, percentage) values ('hs50', 12,'semaine', 0.5);
+insert into suppl_config (code, max_hour_per_period, period_type, percentage) values ('hs30', 8,'semaine', 0.30);
+insert into suppl_config (code, max_hour_per_period, period_type, percentage) values ('hs50', 12,'semaine', 0.5);
 
 -- insert into suppl_config_max (max_hour_supp) values (20);
 

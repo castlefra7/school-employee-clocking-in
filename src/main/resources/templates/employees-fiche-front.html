@@ -100,6 +100,11 @@
                                 </tr>
                                 <tr>
                                     <td></td>
+                                    <td colspan="2">Salaire</td>
+                                    <td th:text="${#numbers.formatDecimal(amounts[3],3,'POINT',2,'COMMA')} + ' Ar'" />
+                                </tr>
+                                <tr>
+                                    <td></td>
                                     <td colspan="2">Total à payer</td>
                                     <td th:text="${#numbers.formatDecimal(amounts[1],3,'POINT',2,'COMMA')} + ' Ar'" />
                                 </tr>
