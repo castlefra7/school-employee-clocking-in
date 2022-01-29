@@ -58,3 +58,15 @@ canvas {
 .results ul li:hover {
     background: #ececec
 }
+
+#menu-aside {
+    background-color: aquamarine;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+#mn-content {
+    margin-left: 320px;
+}

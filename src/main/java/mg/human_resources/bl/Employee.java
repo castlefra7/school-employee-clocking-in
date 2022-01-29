@@ -96,8 +96,9 @@ public final class Employee extends BaseModel {
                 EmployeePaie _empPaie = ((Employee) base).getEmpPaie();
                 List<EmployeeWeeklyHoursAndAmount> _empPaieHours = _empPaie.getPaie();
                 for (EmployeeWeeklyHoursAndAmount paie : _empPaieHours) {
-                    tempHours.put(paie.getCode(), paie.getHours());
-                    tempAmounts.put(paie.getCode(), paie.getTotalAmount());
+                    tempHours.put(paie.getCode(), (tempHours.get(paie.getCode()) != null ? tempHours.get(paie.getCode()) : 0 ) + paie.getHours());
+                    
+                    tempAmounts.put(paie.getCode(),  (tempAmounts.get(paie.getCode()) != null ? tempAmounts.get(paie.getCode()) : 0 ) + paie.getTotalAmount());
                 }
             }
             Set<String> keys = tempHours.keySet();

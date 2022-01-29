@@ -2,56 +2,63 @@
 <html>
     <div th:replace="fragments/general.html :: head"></div>
     <body>
-        <div th:replace="fragments/general.html :: header"></div>
+        <div class="columns ">
+            <div class="" th:replace="fragments/general.html :: header"></div>
+            <div id="mn-content" class="column">
+                <div th:replace="fragments/general.html :: messages"></div>
 
-        <div class="columns is-centered">
-            <div class="column is-four-fifths">
-                <h1 class="is-size-1">Liste catégories</h1>
-                <a class="button is-primary" th:href="@{/categories-form}">Nouvelle catégorie</a>
-
-                <table class="table is-bordered mt-2">
-                    <thead>
-                        <tr>
-                            <th>Nom</th>
-                            <th>Heures/jour</th>
-                            <th>Semaine début</th>
-                            <th>Semaine fin</th>
-                            <th>Total Heures/semaines</th>
-                            <th>Salaire hebdomadaire</th>
-                            <th>Indemnité</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="categ: ${categories}">
-                            <td th:text="${categ.getName()}" />
-                            <td th:text="${categ.getStandard_hour_per_day()}" />
-                            <td th:text="${categ.getDay_week_start()}" />
-                            <td th:text="${categ.getDay_week_end()}" />
-                            <td th:text="${categ.getWeekly_hour()}" />
-                            <td th:text="${categ.getStandard_salary()}" />
-                            <td th:text="${categ.getIndemnity_percent()}" />
-                            <td>
-                                <a th:href="@{/categories/{id}(id=${categ.getId()})}" class="button is-primary">Détails</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-
-                <nav th:if="${numberpages > 0}" class="pagination is-centered" role="navigation" aria-label="pagination">
-                    <a th:href="@{/categories(page=${prev})}"  class="pagination-previous">Previous</a>
-                    <a th:href="@{/categories(page=${next})}" class="pagination-next">Next page</a>
-                    <ul class="pagination-list">
-                        <li  th:each="iter: ${#numbers.sequence(1, __${numberpages}__)}">
-                            <a
-                                th:classappend="${(iter-1== page) ? 'is-current': ''}"
-                                th:href="@{/categories(page=${iter-1})}"
-                                th:text="${iter}" class="pagination-link">-1</a></li>
-                    </ul>
-                </nav>
-
+                <div class="columns">
+                    <div class="column">
+                        <h1 class="is-size-1">Liste catégories</h1>
+                        <a class="button is-small is-primary" th:href="@{/categories-form}">Nouvelle catégorie</a>
+        
+                        <table class="table is-bordered mt-2">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Heures/jour</th>
+                                    <th>Semaine début</th>
+                                    <th>Semaine fin</th>
+                                    <th>Total Heures/semaines</th>
+                                    <th>Salaire hebdomadaire</th>
+                                    <th>Indemnité</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="categ: ${categories}">
+                                    <td th:text="${categ.getName()}" />
+                                    <td th:text="${categ.getStandard_hour_per_day()}" />
+                                    <td th:text="${categ.getDay_week_start()}" />
+                                    <td th:text="${categ.getDay_week_end()}" />
+                                    <td th:text="${categ.getWeekly_hour()}" />
+                                    <td th:text="${categ.getStandard_salary()}" />
+                                    <td th:text="${categ.getIndemnity_percent()}" />
+                                    <td>
+                                        <a th:href="@{/categories/{id}(id=${categ.getId()})}" class="button is-small is-primary">Détails</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+        
+        
+                        <nav th:if="${numberpages > 0}" class="pagination is-centered" role="navigation" aria-label="pagination">
+                            <a th:href="@{/categories(page=${prev})}"  class="pagination-previous">Previous</a>
+                            <a th:href="@{/categories(page=${next})}" class="pagination-next">Next page</a>
+                            <ul class="pagination-list">
+                                <li  th:each="iter: ${#numbers.sequence(1, __${numberpages}__)}">
+                                    <a
+                                        th:classappend="${(iter-1== page) ? 'is-current': ''}"
+                                        th:href="@{/categories(page=${iter-1})}"
+                                        th:text="${iter}" class="pagination-link">-1</a></li>
+                            </ul>
+                        </nav>
+        
+                    </div>
+                </div>
             </div>
         </div>
+
+       
         <div th:replace="fragments/general.html :: footer"></div>
     </body>
 </html> 

@@ -2,59 +2,66 @@
 <html>
     <div th:replace="fragments/general.html :: head"></div>
     <body>
-        <div th:replace="fragments/general.html :: header"></div>
 
-        <div class="columns is-centered m-5">
-            <div class="column is-full">
-                <h1 class="is-size-1">Liste employés</h1>
+        <div class="columns ">
+            <div class="" th:replace="fragments/general.html :: header"></div>
 
-                <table class="table is-bordered mt-2">
-                    <thead>
-                        <tr>
-                            <th>Numéro matricule</th>
-                            <th>Nom</th>
-                            <th>Prénom</th>
-                            <th>Catégorie</th>
-                            <th>Salaire</th>
-                            <th>Date naissance</th>
-                            <th>Date embauche</th>
-                            <th>Date fin contrat</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="emp: ${employees}">
-                            <td th:text="${emp.getRegistration_number()}" />
-                            <td th:text="${emp.getLast_name()}" />
-                            <td th:text="${emp.getFirst_name()}" />
-                            <td th:text="${emp.getCategory().getName()}" />
-                            <td th:text="${emp.getCategory().getStandard_salary()}" />
-                            <td th:text="${emp.getDate_birth()}" />
-                            <td th:text="${emp.getDate_begin_employment()}" />
-                            <td th:text="${emp.getDate_end_employment()}" />
-                            <td>
-                                <div class="buttons">
-                                    <a th:href="@{/employees-pointage-front/{id}(id=${emp.getId()})}" class="button is-primary">Pointage</a>
-                                    <a th:href="@{/employees-fiche-front/{id}(id=${emp.getId()})}" class="button is-primary">Fiche Paie</a>
-                                </div>
-                                
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <nav th:if="${numberpages > 0}" class="pagination is-centered" role="navigation" aria-label="pagination">
-                    <a th:href="@{/employees-front(page=${prev})}"  class="pagination-previous">Previous</a>
-                    <a th:href="@{/employees-front(page=${next})}" class="pagination-next">Next page</a>
-                    <ul class="pagination-list">
-                        <li  th:each="iter: ${#numbers.sequence(1, __${numberpages}__)}">
-                            <a
-                                th:classappend="${(iter-1== page) ? 'is-current': ''}"
-                                th:href="@{/employees-front(page=${iter-1})}"
-                                th:text="${iter}" class="pagination-link">-1</a></li>
-                    </ul>
-                </nav>
-
+            <div id="mn-content"  class="column">
+                <div th:replace="fragments/general.html :: messages"></div>
+                <div class="columns is-centered">
+                    <div class="column is-full">
+                        <h1 class="is-size-1">Liste employés</h1>
+    
+                        <table class="table is-bordered mt-2">
+                            <thead>
+                                <tr>
+                                    <th>Matricule</th>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Catégorie</th>
+                                    <th>Salaire</th>
+                                    <th>Date naissance</th>
+                                    <th>Date embauche</th>
+                                    <th>Date fin contrat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="emp: ${employees}">
+                                    <td th:text="${emp.getRegistration_number()}" />
+                                    <td th:text="${emp.getLast_name()}" />
+                                    <td th:text="${emp.getFirst_name()}" />
+                                    <td th:text="${emp.getCategory().getName()}" />
+                                    <td th:text="${emp.getCategory().getStandard_salary()}" />
+                                    <td th:text="${emp.getDate_birth()}" />
+                                    <td th:text="${emp.getDate_begin_employment()}" />
+                                    <td th:text="${emp.getDate_end_employment()}" />
+                                    <td>
+                                        <div class="buttons">
+                                            <a th:href="@{/employees-pointage-front/{id}(id=${emp.getId()})}" class="button is-small is-primary">Pointage</a>
+                                            <a th:href="@{/employees-fiche-front/{id}(id=${emp.getId()})}" class="button is-small is-primary">Fiche Paie</a>
+                                        </div>
+                                        
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+    
+                        <nav th:if="${numberpages > 0}" class="pagination is-centered" role="navigation" aria-label="pagination">
+                            <a th:href="@{/employees-front(page=${prev})}"  class="pagination-previous">Previous</a>
+                            <a th:href="@{/employees-front(page=${next})}" class="pagination-next">Next page</a>
+                            <ul class="pagination-list">
+                                <li  th:each="iter: ${#numbers.sequence(1, __${numberpages}__)}">
+                                    <a
+                                        th:classappend="${(iter-1== page) ? 'is-current': ''}"
+                                        th:href="@{/employees-front(page=${iter-1})}"
+                                        th:text="${iter}" class="pagination-link">-1</a></li>
+                            </ul>
+                        </nav>
+    
+                    </div>
+                </div>
             </div>
+            
         </div>
         <div th:replace="fragments/general.html :: footer"></div>
     </body>

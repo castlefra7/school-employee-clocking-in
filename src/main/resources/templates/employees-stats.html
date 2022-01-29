@@ -2,78 +2,84 @@
 <html>
     <div th:replace="fragments/general.html :: head"></div>
     <body>
-        <div th:replace="fragments/general.html :: header"></div>
-
-        <div class="columns m-5">
-            <div class="column is-half">
-                <h1 class="is-size-1">Statistiques</h1>
-
-                <form method="get" th:action="@{/stats}" >
-                    <div class="field">
-                        <label>Semaine</label>
-                        <div class="control">
-                            <input style="max-width: 25%;" name="id-semaine" id="id-semaine" class="input" value="1" type='number'/>
-                        </div>
+        <div class="columns">
+            <div class="" th:replace="fragments/general.html :: header"></div>
+            <div  id="mn-content" class="column">
+                <div th:replace="fragments/general.html :: messages"></div>
+                <div class="columns ">
+                    <div class="column">
+                        <h1 class="is-size-1">Statistiques</h1>
+        
+                        <form method="get" th:action="@{/stats}" >
+                            <div class="field">
+                                <label>Semaine</label>
+                                <div class="control">
+                                    <input style="max-width: 25%;" name="id-semaine" id="id-semaine" class="input" value="1" type='number'/>
+                                </div>
+                            </div>
+                            <input id="stat-id-semaine" type='submit' class='button is-primary' value="Valider" />
+                        </form>
+                        <p class="is-size-3"><u>Semaine <span th:text="${id_semaine}" /></u></p>
+                        <table class="table is-bordered mt-2">
+                            <thead>
+                                <tr>
+                                    <th>Matricule</th>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Catégorie</th>
+                                    <th>Salaire Base</th>
+                                    <th>Salaire à payer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="emp: ${employees}">
+                                    <td th:text="${emp.getRegistration_number()}" />
+                                    <td th:text="${emp.getLast_name()}" />
+                                    <td th:text="${emp.getFirst_name()}" />
+                                    <td th:text="${emp.getCategory().getName()}" />
+                                    <td th:text="${#numbers.formatDecimal(emp.getCategory().getStandard_salary(),3,'POINT',2,'COMMA')} + ' Ar'" />
+                                    <td th:text="${#numbers.formatDecimal(emp.getTotalSalary(),3,'POINT',2,'COMMA')} + ' Ar'" />
+                                </tr>
+                            </tbody>
+                        </table>
+        
+         <nav th:if="${numberpages > 0}" class="pagination is-centered" role="navigation" aria-label="pagination">
+                            <a th:href="@{/stats(page=${prev})}"  class="pagination-previous">Previous</a>
+                            <a th:href="@{/stats(page=${next})}" class="pagination-next">Next page</a>
+                            <ul class="pagination-list">
+                                <li  th:each="iter: ${#numbers.sequence(1, __${numberpages}__)}">
+                                    <a
+                                        th:classappend="${(iter-1== page) ? 'is-current': ''}"
+                                        th:href="@{/stats(page=${iter-1})}"
+                                        th:text="${iter}" class="pagination-link">-1</a></li>
+                            </ul>
+                        </nav>
                     </div>
-                    <input id="stat-id-semaine" type='submit' class='button is-primary' value="Valider" />
-                </form>
-                <p>Semaine <span th:text="${id_semaine}" /> </p>
-                <table class="table is-bordered mt-2">
-                    <thead>
-                        <tr>
-                            <th>Numéro matricule</th>
-                            <th>Nom</th>
-                            <th>Prénom</th>
-                            <th>Catégorie</th>
-                            <th>Salaire Base</th>
-                            <th>Salaire à payer</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="emp: ${employees}">
-                            <td th:text="${emp.getRegistration_number()}" />
-                            <td th:text="${emp.getLast_name()}" />
-                            <td th:text="${emp.getFirst_name()}" />
-                            <td th:text="${emp.getCategory().getName()}" />
-                            <td th:text="${#numbers.formatDecimal(emp.getCategory().getStandard_salary(),3,'POINT',2,'COMMA')} + ' Ar'" />
-                            <td th:text="${#numbers.formatDecimal(emp.getTotalSalary(),3,'POINT',2,'COMMA')} + ' Ar'" />
-                        </tr>
-                    </tbody>
-                </table>
-
- <nav th:if="${numberpages > 0}" class="pagination is-centered" role="navigation" aria-label="pagination">
-                    <a th:href="@{/stats(page=${prev})}"  class="pagination-previous">Previous</a>
-                    <a th:href="@{/stats(page=${next})}" class="pagination-next">Next page</a>
-                    <ul class="pagination-list">
-                        <li  th:each="iter: ${#numbers.sequence(1, __${numberpages}__)}">
-                            <a
-                                th:classappend="${(iter-1== page) ? 'is-current': ''}"
-                                th:href="@{/stats(page=${iter-1})}"
-                                th:text="${iter}" class="pagination-link">-1</a></li>
-                    </ul>
-                </nav>
-            </div>
-
-
-            <div class="column">
-                <table id="table-hours" class="table is-bordered mt-2">
-                    <thead>
-                        <tr>
-                            <th>Désignation</th>
-                            <th>Total Heures</th>
-                            <th>Total montant</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="stat: ${statsHours}">
-                            <td th:text="${stat.getCode()}" />
-                            <td th:text="${stat.getHours()} + ' Hr'" />
-                            <td th:text="${#numbers.formatDecimal(stat.getTotalAmount(),3,'POINT',2,'COMMA')} + ' Ar'" />
-                        </tr>
-                    </tbody>
-                </table>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <h2 class="is-size-4"><u>Etat pour chaque type d'heure</u></h2>
+                        <table id="table-hours" class="table is-bordered mt-2">
+                            <thead>
+                                <tr>
+                                    <th>Désignation</th>
+                                    <th>Total Heures</th>
+                                    <th>Total montant</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="stat: ${statsHours}">
+                                    <td th:text="${stat.getCode()}" />
+                                    <td th:text="${stat.getHours()} + ' Hr'" />
+                                    <td th:text="${#numbers.formatDecimal(stat.getTotalAmount(),3,'POINT',2,'COMMA')} + ' Ar'" />
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
+        
         <div th:replace="fragments/general.html :: footer"></div>
     </body>
 </html> 

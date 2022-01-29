@@ -173,7 +173,7 @@ public final class Example {
     }
 
     public void setName(String name) throws Exception {
-        if(name.isEmpty() || name.isBlank()) throw new Exception("Entrez un nom valide");
+        if(name.isEmpty() || name.trim().isEmpty()) throw new Exception("Entrez un nom valide");
         this.name = name;
     }
 

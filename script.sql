@@ -1,7 +1,7 @@
 /*
     db: ressources_humaines
     user: haha
-    pwd: 123456
+    pwd: 1
 
     ALTER USER haha WITH SUPERUSER;
 

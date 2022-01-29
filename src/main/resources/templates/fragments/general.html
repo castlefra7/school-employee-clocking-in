@@ -5,118 +5,122 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <html>
-    <head th:fragment="head">
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link th:href="@{/css/bulma.min.css}" rel="stylesheet" />
-        <link th:href="@{/css/style.css}" rel="stylesheet">
-        <meta name="_csrf" th:content="${_csrf.token}"/>
-        <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
-        <script src="@{/js/chart.min.js}"></script> 
+<head th:fragment="head">
+    <title>TODO supply a title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link th:href="@{/css/bulma.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
 
-        <style>
-            alert {
-                color: red !important;
-            }
-        </style>
-    </head>
-    <body>
-        <div th:fragment="header">
-            <nav class="navbar" role="navigation" aria-label="main navigation">
-                <div class="navbar-brand">
-                    <a class="navbar-item" th:href="@{/employees-front}">
-                        Ressources Humaines
-                    </a>
-                    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                    </a>
-                </div>
+    <script src="@{/js/chart.min.js}"></script>
 
-                <div id="navbarBasicExample" class="navbar-menu">
-                    <div  sec:authorize="isAuthenticated()" class="navbar-start">
-                        <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/categories}">
-                            Catégories
-                        </a>
-                        <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/employees}">
-                            Employés
-                        </a>
-                        <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/supplementaries}">
-                            Supplémentaires
-                        </a>
-                        <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/majorees}">
-                            Majorées
-                        </a>
-                        <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{supplmax}">
-                           Supplémentaire maximum
-                        </a>
-                        <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/stats}">
-                            Statistiques
-                        </a>
-                        <a sec:authorize='hasAuthority("ADMIN")'  class="navbar-item" th:href="@{/users}">
-                            Utilisateurs
-                        </a>
-                    
+    <style>
+        alert {
+            color: red !important;
+        }
+    </style>
+</head>
 
-                        <a  class="navbar-item" th:href="@{/employees-front}">
-                            Employés Front
-                        </a>
+<body>
 
-                    </div>
-
-                    <div class="navbar-end">
-                        <div class="navbar-item">
-                            <div class="buttons">
-                                <a sec:authorize="!isAuthenticated()" th:href="@{/login}" class="button is-primary">
-                                    <strong>Se connecter</strong>
-                                </a>
-                                
-                                <form class="is-flex is-align-items-center is-flex-direction-row" 
-                                      sec:authorize="isAuthenticated()" th:action="@{/perform_logout}" method="post">
-                                    <button th:text ="${#authentication.getPrincipal().getUser().getName()}" class="button" disabled></button>
-                                    <input class="button is-primary" type="submit" value="Se déconnecter" />
-                                </form>
-                            </div>
+    <div th:fragment="messages" >
+        <div th:if="${error != null}">
+            <div th:if="${error != ''}" class="columns mt-2 is-mobile is-centered">
+                <div class="column is-half">
+                    <article class="message is-danger">
+                        <div class="message-header">
+                            <p>Erreur</p>
                         </div>
-                    </div>
-                </div>
-            </nav>
-            <div th:if="${error != null}">
-                <div th:if="${error != ''}" class="columns mt-2 is-mobile is-centered">
-                    <div class="column is-half">
-                        <article class="message is-danger">
-                            <div class="message-header">
-                                <p>Erreur</p>
-                            </div>
 
-                            <div  class="message-body">
-                                <p  th:text="${error}" />
-                            </div>
-                        </article>
-                    </div>
+                        <div  class="message-body">
+                            <p  th:text="${error}" />
+                        </div>
+                    </article>
                 </div>
             </div>
-
-            <div th:if="${success != null}">
-                <div th:if="${success != ''}" class="columns mt-2 is-mobile is-centered">
-                    <div class="column is-half">
-                        <article class="message is-success">
-                            <div class="message-header">
-                                <p>Succès</p>
-                            </div>
-
-                            <div  class="message-body">
-                                <p  th:text="${success}" />
-                            </div>
-                        </article>
-                    </div>
-                </div>
-            </div>
-
         </div>
+
+        <div th:if="${success != null}">
+            <div th:if="${success != ''}" class="columns mt-2 is-mobile is-centered">
+                <div class="column is-half">
+                    <article class="message is-success">
+                        <div class="message-header">
+                            <p>Succès</p>
+                        </div>
+
+                        <div  class="message-body">
+                            <p  th:text="${success}" />
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="menu-aside"  th:fragment="header" class="column is-one-fifth">
+        <nav class="navbar my-2 ml-1" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" th:href="@{/employees-front}">
+                    Ressources Humaines
+                </a>
+            </div>
+        </nav>
+        <aside class="menu ml-1">
+            <p sec:authorize="isAuthenticated()" class="menu-label">Général</p>
+            <ul class="menu-list" sec:authorize="isAuthenticated()">
+                <li><a sec:authorize='hasAuthority("ADMIN")' class="" th:href="@{/stats}">
+                    Statistiques
+                </a></li>
+                <li><a class="" th:href="@{/employees-front}">
+                    Front-Office
+                </a></li>
+            </ul>
+            <p sec:authorize='hasAuthority("ADMIN")' class="menu-label">Entités</p>
+            <ul class="menu-list" sec:authorize="isAuthenticated()">
+                <li><a sec:authorize='hasAuthority("ADMIN")' class="" th:href="@{/employees}">
+                    Employés
+                </a></li>
+                <li><a sec:authorize='hasAuthority("ADMIN")' th:href="@{/categories}">
+                    Catégories
+                </a></li>
+            </ul>
+
+            <p sec:authorize='hasAuthority("ADMIN")' class="menu-label">Configuration</p>
+            <ul class="menu-list" sec:authorize="isAuthenticated()">
+                <li><a sec:authorize='hasAuthority("ADMIN")' class="" th:href="@{/users}">
+                    Utilisateurs
+                </a></li>
+                <li><a sec:authorize='hasAuthority("ADMIN")' class="" th:href="@{/supplementaries}">
+                    Supplémentaires
+                </a></li>
+                <li><a sec:authorize='hasAuthority("ADMIN")' class="" th:href="@{/majorees}">
+                    Majorées
+                </a></li>
+                <li><a sec:authorize='hasAuthority("ADMIN")' class="" th:href="@{/supplmax}">
+                    Supplémentaire maximum
+                </a></li>
+            </ul>
+
+
+            <p class="menu-label">Paramètres</p>
+            <ul class="menu-list">
+                <li><a sec:authorize="!isAuthenticated()" th:href="@{/login}" class="button is-small is-primary">
+                    <strong>Se connecter</strong>
+                </a></li>
+                <li>
+                    <form class="is-flex is-align-items-center is-flex-direction-row"
+                                sec:authorize="isAuthenticated()" th:action="@{/perform_logout}" method="post">
+                        <button th:text="${#authentication.getPrincipal().getUser().getName()}" class="button is-small is-small mr-1" disabled></button>
+                            <input class="button is-small is-primary is-small" type="submit" value="Se déconnecter" />
+                        </form>
+                    </div>
+                </li>
+            </ul>
+            
+        </aside>
     </div>
 
 

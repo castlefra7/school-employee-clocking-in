@@ -30,14 +30,13 @@ public class ConnGen {
             String username = dbUri.getUserInfo().split(":")[0];
             String password = dbUri.getUserInfo().split(":")[1];
             String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath() + "?sslmode=require";
-
             conn = DriverManager.getConnection(dbUrl, username, password);
         } else {
             /*PropReader prop = new PropReader();
             String dbUrl = "jdbc:postgresql://" + "localhost" + ':' + prop.getDbPort() + "/" + prop.getDbName(); 
             conn = DriverManager.getConnection(dbUrl, prop.getDbUser(), prop.getDbPassword());*/
             String dbUrl = "jdbc:postgresql://" + "localhost" + ':' + "5432" + "/" + "ressources_humaines";
-            conn = DriverManager.getConnection(dbUrl, "haha", "123456");
+            conn = DriverManager.getConnection(dbUrl, "postgres", "1");
         }
         return conn;
     }

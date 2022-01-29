@@ -2,50 +2,57 @@
 <html>
     <div th:replace="fragments/general.html :: head"></div>
     <body>
-        <div th:replace="fragments/general.html :: header"></div>
-        <div class="columns is-desktop is-centered">
-            <div class="column p-5 is-one-third">
-                <h1 th:if="${isupdate == null || isupdate == false}">Nouvelle supplémentaire</h1>
-                <h1 th:if="${isupdate != null && isupdate == true}">Mise à jour</h1>
-              
-                <form th:object="${supplAttr}"
-                   method="post"
-                   th:action="${isupdate != null && isupdate == true}?@{/supplementaries-update}:@{/supplementaries}"
-                   >
-                    <input type="hidden" th:field="*{id}" th:value="${supplAttr.id}" />
-                    <div class="field">
-                        <label class="label">Code</label>
-                        <div class="control">
-                            <input class="input" th:field="*{code}" type='text'/>
-                        </div>
+        
+        <div class="columns ">
+            <div class="" th:replace="fragments/general.html :: header"></div>
+            <div  id="mn-content" class="column">
+                <div th:replace="fragments/general.html :: messages"></div>
+                <div class="columns is-desktop is-centered">
+                    <div class="column p-5 is-one-third">
+                        <h1 th:if="${isupdate == null || isupdate == false}">Nouvelle supplémentaire</h1>
+                        <h1 th:if="${isupdate != null && isupdate == true}">Mise à jour</h1>
+                      
+                        <form th:object="${supplAttr}"
+                           method="post"
+                           th:action="${isupdate != null && isupdate == true}?@{/supplementaries-update}:@{/supplementaries}"
+                           >
+                            <input type="hidden" th:field="*{id}" th:value="${supplAttr.id}" />
+                            <div class="field">
+                                <label class="label">Code</label>
+                                <div class="control">
+                                    <input class="input" th:field="*{code}" type='text'/>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Nombre heures</label>
+                                <div class="control">
+                                    <input class="input"  th:field="*{max_hour_per_period}" type='number'/>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Type période</label>
+                                <div class="control">
+                                    <input class="input"  th:field="*{period_type}" type='text'/>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Pourcentage</label>
+                                <div class="control">
+                                    <input class="input"  th:field="*{percentage}" step='any' type='number'/>
+                                </div>
+                            </div>
+                            
+                            <div class="buttons">
+                                <button 
+                                        class="button is-small is-primary is-fullwidth" type="submit">Valider</button>
+                            </div>
+        
+                        </form>
+        
                     </div>
-                    <div class="field">
-                        <label class="label">Nombre heures</label>
-                        <div class="control">
-                            <input class="input"  th:field="*{max_hour_per_period}" type='number'/>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Type période</label>
-                        <div class="control">
-                            <input class="input"  th:field="*{period_type}" type='text'/>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Pourcentage</label>
-                        <div class="control">
-                            <input class="input"  th:field="*{percentage}" step='any' type='number'/>
-                        </div>
-                    </div>
-                    
-                    <div class="buttons">
-                        <button 
-                                class="button is-primary is-fullwidth" type="submit">Valider</button>
-                    </div>
-
-                </form>
-
+                </div>
             </div>
         </div>
+
     </body>
 </html>

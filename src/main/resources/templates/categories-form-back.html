@@ -2,77 +2,84 @@
 <html>
     <div th:replace="fragments/general.html :: head"></div>
     <body>
-        <div th:replace="fragments/general.html :: header"></div>
-        <div class="columns is-desktop is-centered">
-            <div class="column p-5 is-one-third">
-                <h1 th:if="${isupdate == null || isupdate == false}">Nouvelle catégorie</h1>
-                <h1 th:if="${isupdate != null && isupdate == true}">Mise à jour</h1>
-              
-                <form th:object="${categoryAttr}"
-                   method="post"
-                   th:action="${isupdate != null && isupdate == true}?@{/categories-update}:@{/categories}"
-                   >
-                    <input type="hidden" th:field="*{id}" th:value="${categoryAttr.id}" />
-                    <div class="field">
-                        <label class="label">Nom</label>
-                        <div class="control">
-                            <input class="input" th:field="*{name}" type='text'/>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Heures/jour</label>
-                        <div class="control">
-                            <input class="input"  th:field="*{standard_hour_per_day}" type='number'/>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Jour semaine début</label>
-                        <div class="select">
-                            <select class="input" th:field="*{day_week_start}">
-                                <option value="1">Lundi</option>
-                                <option value="2">Mardi</option>
-                                <option value="3">Mercredi</option>
-                                <option value="4">Jeudi</option>
-                                <option value="5">Vendredi</option>
-                                <option value="6">Samedi</option>
-                                <option value="7">Dimanche</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Jour semaine fin</label>
-                        <div class="select">
-                            <select class="input" th:field="*{day_week_end}">
-                                <option value="1">Lundi</option>
-                                <option value="2">Mardi</option>
-                                <option value="3">Mercredi</option>
-                                <option value="4">Jeudi</option>
-                                <option value="5">Vendredi</option>
-                                <option value="6">Samedi</option>
-                                <option value="7">Dimanche</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Salaire hebdomadaire</label>
-                        <div class="control">
-                            <input class="input"  th:field="*{standard_salary}" type='number'/>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Pourcentage indemnité</label>
-                        <div class="control">
-                            <input class="input" step="any"  th:field="*{indemnity_percent}" type='number'/>
-                        </div>
-                    </div>
-                    
-                    <div class="buttons">
-                        <button 
-                                class="button is-primary is-fullwidth" type="submit">Valider</button>
-                    </div>
+        <div class="columns">
+            <div class="" th:replace="fragments/general.html :: header"></div>
 
-                </form>
+            <div id="mn-content" class="column">
+                <div th:replace="fragments/general.html :: messages"></div>
 
+                <div class="columns is-desktop is-centered">
+                    <div class="column p-5 is-one-third">
+                        <h1 th:if="${isupdate == null || isupdate == false}">Nouvelle catégorie</h1>
+                        <h1 th:if="${isupdate != null && isupdate == true}">Mise à jour</h1>
+                      
+                        <form th:object="${categoryAttr}"
+                           method="post"
+                           th:action="${isupdate != null && isupdate == true}?@{/categories-update}:@{/categories}"
+                           >
+                            <input type="hidden" th:field="*{id}" th:value="${categoryAttr.id}" />
+                            <div class="field">
+                                <label class="label">Nom</label>
+                                <div class="control">
+                                    <input class="input" th:field="*{name}" type='text'/>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Heures/jour</label>
+                                <div class="control">
+                                    <input class="input"  th:field="*{standard_hour_per_day}" type='number'/>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Jour semaine début</label>
+                                <div class="select">
+                                    <select class="input" th:field="*{day_week_start}">
+                                        <option value="1">Lundi</option>
+                                        <option value="2">Mardi</option>
+                                        <option value="3">Mercredi</option>
+                                        <option value="4">Jeudi</option>
+                                        <option value="5">Vendredi</option>
+                                        <option value="6">Samedi</option>
+                                        <option value="7">Dimanche</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Jour semaine fin</label>
+                                <div class="select">
+                                    <select class="input" th:field="*{day_week_end}">
+                                        <option value="1">Lundi</option>
+                                        <option value="2">Mardi</option>
+                                        <option value="3">Mercredi</option>
+                                        <option value="4">Jeudi</option>
+                                        <option value="5">Vendredi</option>
+                                        <option value="6">Samedi</option>
+                                        <option value="7">Dimanche</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Salaire hebdomadaire</label>
+                                <div class="control">
+                                    <input class="input"  th:field="*{standard_salary}" type='number'/>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Pourcentage indemnité</label>
+                                <div class="control">
+                                    <input class="input" step="any"  th:field="*{indemnity_percent}" type='number'/>
+                                </div>
+                            </div>
+                            
+                            <div class="buttons">
+                                <button 
+                                        class="button is-small is-primary is-fullwidth" type="submit">Valider</button>
+                            </div>
+        
+                        </form>
+        
+                    </div>
+                </div>
             </div>
         </div>
     </body>
