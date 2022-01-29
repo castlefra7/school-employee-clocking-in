@@ -37,30 +37,43 @@ This project is a simple employee clocking in management. Employers can set the 
 Here are the most important user interfaces of this project.
 
 - Employee list page: it lists all employees in the company.
-    - The buttons labels are self-explanatory
-        - "Pointage" means clocking in
-        - "Fiche de paie" means Pay slip
+  - The buttons'labels are self-explanatory: "Pointage" means clocking in, "Fiche de paie" means Pay slip.
 
 ![Employee list](/docs/ui_images/front_office.PNG)
 
 - Clocking in: It is the main page of this project. It is the manager responsibility to inputs the working hours of each individual employee for a particular week of the year.
-    - Buttons
-        - "Valider et afficher fiche" means Validate and Show Pay slip
+  - Buttons
+    - "Valider et afficher fiche" means Validate and Show Pay slip
+
 ![Clocking in](/docs/ui_images/clocking_in.PNG)
 
-- Pay slip: For this project we assumed a weekly salary 
+- Pay slip: For this project we assumed a weekly salary
+
 ![Pay slip](/docs/ui_images/pay_slip.PNG)
 
 - Statistics: We can see the real weekly pay of each employee and a table showing the total hours and amounts of each hour type.
+
 ![Statistics](/docs/ui_images/statistics.PNG)
 
 - Crud: These pages allow us to insert, update, delete and read the data in our the database
+  - Crud category employee
+![Crud category employee](/docs/ui_images/crud_category_employee.PNG)
+  - Crud employee
+![Crud employee](/docs/ui_images/crud_employee.PNG)
+  - Crud overtime
+![Crud overtime](/docs/ui_images/crud_overtime.PNG)
+  - Crud user
+![Crud user](/docs/ui_images/crud_user.PNG)
+  - Crud premium hour
+![Crud premimum](/docs/ui_images/crud_premium.PNG)
+  - Crud max premium hour
+![Crud max premium hour](/docs/ui_images/curd_max_premium_hour.PNG)
 
 ## Database Schema
 > "Simplify your life as a developer by spending more time designing your database"
 
 As much as we can, we should put effort to design the database to avoid unnecessary lengthy code at the application layer of our software.
-![Conceptual Data Model](/docs/ui_images/cdm.PNG)
+![Conceptual Data Model](/docs/ui_images/cdm.png)
 
 ## Other documents
 - To-do list: /docs/gestion-ressources-humaines.ods (in French)
